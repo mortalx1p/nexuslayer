@@ -28,7 +28,7 @@ body{
     overflow:hidden;
 }
 
-/* Glow effects */
+/* Glow background */
 
 body::before,
 body::after{
@@ -53,7 +53,7 @@ body::after{
     right:-100px;
 }
 
-/* Main modal */
+/* Main card */
 
 .modal{
     width:min(92%,420px);
@@ -76,16 +76,18 @@ body::after{
     content:'';
     position:absolute;
     inset:0;
+
     background:linear-gradient(
     135deg,
     rgba(255,255,255,0.04),
     transparent 30%,
     rgba(0,255,153,0.03)
     );
+
     pointer-events:none;
 }
 
-/* Close button */
+/* X close button */
 
 .close{
     position:absolute;
@@ -113,9 +115,12 @@ body::after{
     width:90px;
     height:90px;
     border-radius:50%;
+
     border:5px solid rgba(255,255,255,0.08);
     border-top:5px solid #00ff99;
+
     animation:spin 1s linear infinite;
+
     position:relative;
 
     box-shadow:0 0 25px rgba(0,255,153,.25);
@@ -129,7 +134,7 @@ body::after{
     border:2px solid rgba(0,255,153,.18);
 }
 
-/* Title */
+/* Heading */
 
 h1{
     text-align:center;
@@ -155,7 +160,7 @@ h1{
     line-height:1.5;
 }
 
-/* Progress bar */
+/* Progress */
 
 .progress-container{
     width:100%;
@@ -184,6 +189,8 @@ h1{
     transition:width .2s linear;
 }
 
+/* Percentage */
+
 .percent{
     text-align:center;
     margin-top:16px;
@@ -193,7 +200,7 @@ h1{
     letter-spacing:.5px;
 }
 
-/* Status */
+/* Status box */
 
 .status-box{
     margin-top:24px;
@@ -217,9 +224,6 @@ h1{
     font-weight:700;
     text-shadow:0 0 10px rgba(0,255,153,.4);
 }
-
-/* Cancel button */
-
 
 /* Failed state */
 
@@ -305,7 +309,7 @@ h1{
 
 <div class="modal" id="modal">
 
-    <!-- Close button -->
+    <!-- X button -->
     <div class="close">×</div>
 
     <!-- Spinner -->
@@ -348,11 +352,6 @@ h1{
 
     </div>
 
-    <!-- Cancel button -->
-    <button class="cancel">
-        Cancel
-    </button>
-
 </div>
 
 <script>
@@ -372,15 +371,11 @@ function goBack() {
     window.location.href = "index.html";
 }
 
-/* Close button click */
+/* X button click */
 
 document.querySelector('.close').addEventListener('click', goBack);
 
-/* Cancel button click */
-
-document.querySelector('.cancel').addEventListener('click', goBack);
-
-/* Fake loading */
+/* Fake loading animation */
 
 let progress = 0;
 
@@ -398,7 +393,7 @@ const fakeLoader = setInterval(() => {
 
 }, 220);
 
-/* Fail animation */
+/* Fail state */
 
 setTimeout(() => {
 
