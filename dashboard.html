@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -27,7 +28,8 @@ body{
     overflow:hidden;
 }
 
-/* Floating glow particles */
+/* Glow effects */
+
 body::before,
 body::after{
     content:'';
@@ -51,6 +53,8 @@ body::after{
     right:-100px;
 }
 
+/* Main modal */
+
 .modal{
     width:min(92%,420px);
     background:rgba(0,0,0,0.82);
@@ -60,9 +64,11 @@ body::after{
     padding:35px 28px;
     position:relative;
     overflow:hidden;
+
     box-shadow:
     0 0 40px rgba(0,255,153,0.08),
     inset 0 0 30px rgba(0,255,153,0.03);
+
     animation:fadeIn .6s ease;
 }
 
@@ -79,6 +85,8 @@ body::after{
     pointer-events:none;
 }
 
+/* Close button */
+
 .close{
     position:absolute;
     top:18px;
@@ -92,6 +100,8 @@ body::after{
 .close:hover{
     color:#fff;
 }
+
+/* Spinner */
 
 .spinner-wrap{
     display:flex;
@@ -107,6 +117,7 @@ body::after{
     border-top:5px solid #00ff99;
     animation:spin 1s linear infinite;
     position:relative;
+
     box-shadow:0 0 25px rgba(0,255,153,.25);
 }
 
@@ -117,6 +128,8 @@ body::after{
     border-radius:50%;
     border:2px solid rgba(0,255,153,.18);
 }
+
+/* Title */
 
 h1{
     text-align:center;
@@ -132,6 +145,8 @@ h1{
     text-shadow:0 0 15px rgba(0,255,153,.45);
 }
 
+/* Subtitle */
+
 .sub{
     margin-top:16px;
     text-align:center;
@@ -139,6 +154,8 @@ h1{
     font-size:.97rem;
     line-height:1.5;
 }
+
+/* Progress bar */
 
 .progress-container{
     width:100%;
@@ -154,13 +171,16 @@ h1{
     width:0%;
     height:100%;
     border-radius:20px;
+
     background:linear-gradient(
     90deg,
     #00c978,
     #00ff99,
     #6fffc4
     );
+
     box-shadow:0 0 20px rgba(0,255,153,.55);
+
     transition:width .2s linear;
 }
 
@@ -173,12 +193,15 @@ h1{
     letter-spacing:.5px;
 }
 
+/* Status */
+
 .status-box{
     margin-top:24px;
     border:1px solid rgba(0,255,153,.12);
     background:rgba(255,255,255,0.02);
     border-radius:18px;
     padding:16px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -195,15 +218,20 @@ h1{
     text-shadow:0 0 10px rgba(0,255,153,.4);
 }
 
+/* Cancel button */
+
 .cancel{
     margin-top:28px;
     width:100%;
     padding:15px;
     border:none;
     border-radius:18px;
+
     background:rgba(255,255,255,0.05);
+
     color:#d7d7d7;
     font-size:1rem;
+
     cursor:pointer;
     transition:.25s;
 }
@@ -212,6 +240,8 @@ h1{
     background:rgba(0,255,153,.12);
     color:#00ff99;
 }
+
+/* Failed state */
 
 .failed{
     animation:shake .45s ease;
@@ -232,8 +262,12 @@ h1{
     box-shadow:0 0 20px rgba(255,77,77,.35);
 }
 
+/* Animations */
+
 @keyframes spin{
-    100%{transform:rotate(360deg);}
+    100%{
+        transform:rotate(360deg);
+    }
 }
 
 @keyframes fadeIn{
@@ -241,6 +275,7 @@ h1{
         opacity:0;
         transform:translateY(20px) scale(.98);
     }
+
     to{
         opacity:1;
         transform:translateY(0) scale(1);
@@ -248,14 +283,31 @@ h1{
 }
 
 @keyframes shake{
-    0%,100%{transform:translateX(0);}
-    20%{transform:translateX(-6px);}
-    40%{transform:translateX(6px);}
-    60%{transform:translateX(-4px);}
-    80%{transform:translateX(4px);}
+    0%,100%{
+        transform:translateX(0);
+    }
+
+    20%{
+        transform:translateX(-6px);
+    }
+
+    40%{
+        transform:translateX(6px);
+    }
+
+    60%{
+        transform:translateX(-4px);
+    }
+
+    80%{
+        transform:translateX(4px);
+    }
 }
 
+/* Mobile */
+
 @media(max-width:480px){
+
     h1{
         font-size:1.45rem;
     }
@@ -263,45 +315,60 @@ h1{
     .modal{
         padding:30px 22px;
     }
+
 }
+
 </style>
 </head>
+
 <body>
 
 <div class="modal" id="modal">
 
+    <!-- Close button -->
     <div class="close">×</div>
 
+    <!-- Spinner -->
     <div class="spinner-wrap">
         <div class="spinner"></div>
     </div>
 
+    <!-- Title -->
     <h1 id="title">
         Establishing Secure <span class="fail">Connection</span>
     </h1>
 
+    <!-- Subtitle -->
     <p class="sub" id="subtitle">
         Please wait while we verify your session and process your request securely.
     </p>
 
+    <!-- Progress -->
     <div class="progress-container">
         <div class="progress-bar" id="bar"></div>
     </div>
 
+    <!-- Percentage -->
     <div class="percent" id="percent">
         0% complete
     </div>
 
+    <!-- Status -->
     <div class="status-box">
+
         <div>
-            <div class="status-label">Connection Status</div>
+            <div class="status-label">
+                Connection Status
+            </div>
         </div>
 
         <div class="status-value" id="statusText">
             CONNECTING
         </div>
+
     </div>
 
+    <!-- Cancel button -->
     <button class="cancel">
         Cancel
     </button>
@@ -309,12 +376,31 @@ h1{
 </div>
 
 <script>
+
+/* Elements */
+
 const bar = document.getElementById('bar');
 const percent = document.getElementById('percent');
 const modal = document.getElementById('modal');
 const title = document.getElementById('title');
 const subtitle = document.getElementById('subtitle');
 const statusText = document.getElementById('statusText');
+
+/* Redirect function */
+
+function goBack() {
+    window.location.href = "index.html";
+}
+
+/* Close button click */
+
+document.querySelector('.close').addEventListener('click', goBack);
+
+/* Cancel button click */
+
+document.querySelector('.cancel').addEventListener('click', goBack);
+
+/* Fake loading */
 
 let progress = 0;
 
@@ -327,16 +413,21 @@ const fakeLoader = setInterval(() => {
     }
 
     bar.style.width = progress + '%';
+
     percent.innerText = progress + '% complete';
 
 }, 220);
+
+/* Fail animation */
 
 setTimeout(() => {
 
     clearInterval(fakeLoader);
 
     progress = 100;
+
     bar.style.width = '100%';
+
     percent.innerText = '100% complete';
 
     modal.classList.add('failed');
@@ -351,9 +442,11 @@ setTimeout(() => {
     `;
 
     statusText.innerText = 'FAILED';
+
     statusText.style.color = '#ff5757';
 
 }, 6500);
+
 </script>
 
 </body>
